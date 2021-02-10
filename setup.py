@@ -27,8 +27,13 @@ metadata = {'__file__': os.path.join(here, 'plenum', '__metadata__.py')}
 with open(metadata['__file__'], 'r') as f:
     exec(f.read(), metadata)
 
+<<<<<<< HEAD
 tests_require = ['attrs==19.1.0', 'pytest==3.3.1', 'pytest-xdist==1.22.1', 'pytest-forked==0.2',
                  'python3-indy==1.16.0-dev-1636', 'pytest-asyncio==0.8.0']
+=======
+tests_require = ['attrs', 'pytest', 'pytest-xdist', 'pytest-forked',
+                 'python3-indy==1.13.0-dev-1420', 'pytest-asyncio']
+>>>>>>> 4ac74853 (upgraded rlp library and moved over some deprecated functionality)
 
 
 class PyZMQCommand(distutils.cmd.Command):
@@ -94,7 +99,10 @@ setup(
              '*.css', '*.ico', '*.png', 'LICENSE', 'LEGAL', 'plenum']},
     include_package_data=True,
 
+    #FIXME -> RTM: a function in rlp is used which is deprecated in newer versions.
+    # 'rlp==0.5.1',
     install_requires=[
+<<<<<<< HEAD
                         'jsonpickle==0.9.6',
                         'ujson==1.33',
                         'prompt_toolkit==0.57',
@@ -118,6 +126,30 @@ setup(
                         'python-dateutil==2.6.1',
                         'pympler==0.8',
                         'packaging==19.0',
+=======
+                        'jsonpickle',
+                        'ujson',
+                        'prompt_toolkit',
+                        'pygments',
+                        'rlp',
+                        'sha3',
+                        'ioflo',
+                        'semver',
+                        'base58',
+                        'orderedset',
+                        'sortedcontainers',
+                        'psutil',
+                        'pip<10.0.0',
+                        'portalocker',
+                        'libnacl',
+                        'six',
+                        'intervaltree',
+                        'msgpack-python',
+                        'python-rocksdb',
+                        'python-dateutil',
+                        'pympler',
+                        'packaging',
+>>>>>>> 4ac74853 (upgraded rlp library and moved over some deprecated functionality)
                         'python-ursa==0.1.1',
                       ],
 
