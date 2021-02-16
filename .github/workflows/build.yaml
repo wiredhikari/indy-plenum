@@ -302,8 +302,12 @@ jobs:
 =======
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
+>>>>>>> 790bff42 (change env to direct output variable)
     strategy:
       matrix:
         module: [plenum]
@@ -382,8 +386,12 @@ jobs:
     env:
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
+>>>>>>> 790bff42 (change env to direct output variable)
     strategy:
       matrix:
         module: [common, crypto, ledger, state, storage, stp_core, stp_zmq]
@@ -438,8 +446,12 @@ jobs:
     env:
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
+>>>>>>> 790bff42 (change env to direct output variable)
     steps:
       - name: Check out code
         uses: actions/checkout@v2
