@@ -114,6 +114,7 @@ def check_precision(mc: MockMetricsCollector,
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # FIXME -> RTM: Failing Test *
 =======
 # FIXME -> RTM: Failed with precision .001 -> Is it my VM?
@@ -121,6 +122,9 @@ def check_precision(mc: MockMetricsCollector,
 =======
 # FIXME -> RTM: Fixed Failing test -> increased to 2 ms. Is this appropriate?
 >>>>>>> 35e3c1ec (fixes tests and adds comments)
+=======
+# FIXME -> RTM: Fixed Failing test -> increased to 2 ms. Is this appropriate?
+>>>>>>> f2a505d3 (merge conflict)
 def test_metrics_collector_measures_time():
     mc = MockMetricsCollector()
     def f():
@@ -133,6 +137,7 @@ def test_metrics_collector_measures_time():
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # FIXME -> RTM: Failing Test *
 =======
 # FIXME -> RTM: Failed with precision .001 -> Is it my VM?
@@ -140,6 +145,9 @@ def test_metrics_collector_measures_time():
 =======
 # FIXME -> RTM: Fixed Failing test -> increased to 2 ms. Is this appropriate?
 >>>>>>> 35e3c1ec (fixes tests and adds comments)
+=======
+# FIXME -> RTM: Fixed Failing test -> increased to 2 ms. Is this appropriate?
+>>>>>>> f2a505d3 (merge conflict)
 def test_measure_time_decorator():
     mc = MockMetricsCollector()
 
