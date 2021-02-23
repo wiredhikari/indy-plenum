@@ -104,8 +104,6 @@ setup(
              '*.css', '*.ico', '*.png', 'LICENSE', 'LEGAL', 'plenum']},
     include_package_data=True,
 
-    #FIXME -> RTM: a function in rlp is used which is deprecated in newer versions.
-    # 'rlp==0.5.1',
     install_requires=[
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -161,7 +159,8 @@ setup(
                         'ujson>=1.33',
                         'prompt_toolkit>=3.0.16',
                         'pygments>=2.2.0',
-                        'rlp>=0.6.0',
+                        # FIXME -> RTM: a function in rlp is used which is deprecated in newer versions.
+                        'rlp<=0.6.0',
                         'sha3>=0.2.1',
                         'ioflo>=2.0.2',
                         'semver>=2.13.0',
