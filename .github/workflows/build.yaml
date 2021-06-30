@@ -29,9 +29,12 @@ jobs:
 on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-
   workflow-setup:
+<<<<<<< HEAD
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+    name: Initialize Workflow
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     runs-on: ubuntu-latest
     outputs:
       CACHE_KEY_BUILD: ${{ steps.cache.outputs.CACHE_KEY_BUILD }}
@@ -54,6 +57,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       GITHUB_REPOSITORY_NAME: ${{ steps.repository-name.outputs.lowercase }}
@@ -72,6 +76,13 @@ jobs:
       GITHUB_REPOSITORY_NAME: ${{ steps.cache.outputs.GITHUB_REPOSITORY_NAME }}
       GITHUB_REF: ${{ steps.cache.outputs.GITHUB_REF }}
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      GITHUB_REPOSITORY_NAME: ${{ steps.repository-name.outputs.lowercase }}
+      GITHUB_REF: ${{ steps.cache.outputs.GITHUB_REF }}
+      isDev: ${{ steps.build-flags.outputs.isDev }}
+      isRC: ${{ steps.build-flags.outputs.isRC }}
+      publish: ${{ steps.build-flags.outputs.publish }}
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
@@ -79,8 +90,11 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Convert the GitHub repository name to lowercase
         id: repository-name
         uses: ASzc/change-string-case-action@v1
@@ -88,18 +102,25 @@ jobs:
           string: ${{ github.repository }}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Set outputs
         id: cache
         run: |
           echo "::set-output name=CACHE_KEY_BUILD::${{ hashFiles('.github/workflows/build/Dockerfile') }}"
           echo "::set-output name=CACHE_KEY_LINT::${{ hashFiles('.github/workflows/lint/Dockerfile') }}"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
 
           if [[ "${{github.base_ref}}" == 'master' || "${{github.ref}}" == 'refs/heads/master' || "${{github.base_ref}}" == 'main' || "${{github.ref}}" == 'refs/heads/main' ]]; then
             echo "::set-output name=GITHUB_REF::main"
           elif [[ "${{github.base_ref}}" == 'release*' || "${{github.ref}}" == 'refs/heads/release*' ]]; then
+<<<<<<< HEAD
             echo "::set-output name=GITHUB_REF::rc"
           elif [[ "${{github.base_ref}}" == 'stable' || "${{github.ref}}" == 'refs/heads/stable' ]]; then
             echo "::set-output name=GITHUB_REF::stable"
@@ -198,14 +219,44 @@ jobs:
             echo "::set-output name=GITHUB_REF::master"
           fi
           if [[ "${{github.base_ref}}" == "release*" || "${{github.ref}}" == "refs/heads/release*" ]]; then
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
             echo "::set-output name=GITHUB_REF::rc"
-          fi
-          if [[ "${{github.base_ref}}" == "stable" || "${{github.ref}}" == "refs/heads/stable" ]]; then
+          elif [[ "${{github.base_ref}}" == 'stable' || "${{github.ref}}" == 'refs/heads/stable' ]]; then
             echo "::set-output name=GITHUB_REF::stable"
+          else
+            echo "::set-output name=GITHUB_REF::dev"
+          fi
+
+      - name: Set build flags
+        id: build-flags
+        run: |
+
+          if [[ "${{steps.cache.outputs.GITHUB_REF}}" == 'dev' || "${{steps.cache.outputs.GITHUB_REF}}" == 'main' ]]; then
+            echo "::set-output name=isDev::true"
+          else
+            echo "::set-output name=isDev::false"
+          fi
+
+          if [[ "${{steps.cache.outputs.GITHUB_REF}}" == 'rc' ]]; then
+            echo "::set-output name=isRC::true"
+          else
+            echo "::set-output name=isRC::false"
+          fi
+
+          # Ensure publishing is only performed when the build is executed from the main (hyperledger/indy-plenum) repository.
+          if [[ ${{github.event.repository.full_name}} == 'hyperledger/indy-plenum' && ${{github.event_name}} == 'push' && ( ${{steps.cache.outputs.GITHUB_REF}} == 'main' || ${{steps.cache.outputs.GITHUB_REF}} == 'rc' || ${{steps.cache.outputs.GITHUB_REF}} == 'stable' ) ]]; then
+            echo "::set-output name=publish::true"
+          else
+            echo "::set-output name=publish::false"
           fi
 
   build-image:
+<<<<<<< HEAD
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+    name: Create Builder Image
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     # Reference to workflow-setup job is required to access its various outputs.
     needs: workflow-setup
     runs-on: ubuntu-latest
@@ -213,10 +264,13 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       CACHE_KEY_BUILD: ${{ needs.workflow-setup.outputs.CACHE_KEY_BUILD }}
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
 =======
       DOCKER_BUILDKIT: 1
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       CACHE_KEY_BUILD: ${{ needs.workflow-setup.outputs.CACHE_KEY_BUILD }}
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
@@ -238,6 +292,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Try load from cache
 =======
       - name: Try load from cache.
@@ -248,6 +303,9 @@ jobs:
 =======
       - name: Try load from cache.
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      - name: Try load from cache
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
         id: cache-image
         uses: actions/cache@v2
         with:
@@ -257,8 +315,11 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Prepare image labels and tags
         if: steps.cache-image.outputs.cache-hit != 'true'
         id: prep
@@ -266,11 +327,16 @@ jobs:
         run: |
           DOCKER_IMAGE=ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build
 <<<<<<< HEAD
+<<<<<<< HEAD
           # ToDo - Update hard coded 'ubuntu-16-04' tag when integrating these flows with the ubuntu-20.04-upgrade branch.
           TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:ubuntu-16-04"
 =======
           TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:${{ env.UBUNTU_VERSION }}"
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+          # ToDo - Update hard coded 'ubuntu-16-04' tag when integrating these flows with the ubuntu-20.04-upgrade branch.
+          TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:ubuntu-16-04"
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
@@ -292,10 +358,14 @@ jobs:
         with:
           context: .
 <<<<<<< HEAD
+<<<<<<< HEAD
           file: .github/workflows/build/Dockerfile
 =======
           file: .github/workflows/build/Dockerfile.${{ env.UBUNTU_VERSION }}
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+          file: .github/workflows/build/Dockerfile
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           no-cache: true
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
@@ -305,6 +375,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Touch Cache
+<<<<<<< HEAD
 <<<<<<< HEAD
         if: steps.cache-image.outputs.cache-hit != 'true'
         run: |
@@ -329,10 +400,15 @@ jobs:
           docker tag ${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.CACHE_KEY_BUILD }} ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build:latest
           docker push ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build:latest
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        run: |
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           mkdir -p ${GITHUB_WORKSPACE}/cache
           touch ${GITHUB_WORKSPACE}/cache/${{ env.CACHE_KEY_BUILD }}
 
   lint-image:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -344,6 +420,9 @@ jobs:
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+    name: Create Linter Image
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     # Reference to workflow-setup job is required to access its various outputs.
     needs: workflow-setup
     runs-on: ubuntu-latest
@@ -351,10 +430,13 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       CACHE_KEY_LINT: ${{ needs.workflow-setup.outputs.CACHE_KEY_LINT }}
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
 =======
       DOCKER_BUILDKIT: 1
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       CACHE_KEY_LINT: ${{ needs.workflow-setup.outputs.CACHE_KEY_LINT }}
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
@@ -376,6 +458,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Try load from cache
 =======
       - name: Try load from cache.
@@ -386,10 +469,14 @@ jobs:
 =======
       - name: Try load from cache.
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      - name: Try load from cache
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
         id: cache-image
         uses: actions/cache@v2
         with:
           path: ${GITHUB_WORKSPACE}/cache
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -491,19 +578,63 @@ jobs:
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
           key: ${{ env.CACHE_KEY_LINT}}
+=======
+          key: ${{ env.CACHE_KEY_LINT }}
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
 
-      - name: If NOT found in cache, build and push image.
+      - name: Prepare image labels and tags
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        id: prep
+        shell: bash
+        run: |
+          DOCKER_IMAGE=ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint
+          # ToDo - Update hard coded 'ubuntu-18-04' tag when integrating these flows with the ubuntu-20.04-upgrade branch.
+          TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:ubuntu-18-04"
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Log into the GitHub Container Registry
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push image
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: .github/workflows/lint/Dockerfile
+          no-cache: true
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.prep.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.event.repository.html_url }}
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Touch Cache
         if: steps.cache-image.outputs.cache-hit != 'true'
         run: |
+<<<<<<< HEAD
           echo ${{ secrets.CR_PAT }} | docker login ghcr.io --username ${{ secrets.CR_USER }} --password-stdin
           docker build -f .github/workflows/lint/Dockerfile --no-cache -t ${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.CACHE_KEY_LINT }} .
           docker tag ${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.CACHE_KEY_LINT }} ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:latest
           docker push ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:latest
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           mkdir -p ${GITHUB_WORKSPACE}/cache
           touch ${GITHUB_WORKSPACE}/cache/${{ env.CACHE_KEY_LINT }}
 
   indy_plenum_tests:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -517,6 +648,9 @@ jobs:
 =======
     name: Indy Plenum Test Slices
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+    name: Sliced Module Tests
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     # Reference to workflow-setup job is required to access the GITHUB_REPOSITORY_NAME output.
     needs: [workflow-setup, build-image]
     runs-on: ubuntu-20.04
@@ -550,8 +684,12 @@ jobs:
 =======
       NODE_OPTIONS: '--max_old_space_size=4096'
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:ubuntu-16-04
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     strategy:
       matrix:
         module: [plenum]
@@ -567,8 +705,11 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Cache pip
         uses: actions/cache@v2
         with:
@@ -579,6 +720,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       - name: Install dependencies
         run: |
@@ -604,6 +746,12 @@ jobs:
       - name: Install dependencies
         run: pip install .[tests]
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      - name: Install dependencies
+        run: |
+          # Explicitly use the existing pip cache location in the plenum-build image.
+          pip --cache-dir /root/.cache/pip install .[tests]
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
 
       - name: Run Indy Plenum ${{ matrix.module }} test slice ${{ matrix.slice }}/${{ strategy.job-total }}
         id: plenum-test
@@ -633,6 +781,7 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Upload Detailed Test Failure Results
 =======
       - name: 'Upload Detailed Test Failure Results'
@@ -646,6 +795,9 @@ jobs:
 =======
       - name: 'Upload Detailed Test Failure Results'
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      - name: Upload Detailed Test Failure Results
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
         # The test runner only emits the detailed test results if the tests fail.
         if: (steps.plenum-test.outcome == 'failure') && failure()
         uses: actions/upload-artifact@v2
@@ -654,6 +806,7 @@ jobs:
           path: test-result-plenum-${{ matrix.slice }}.txt
           retention-days: 5
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -690,12 +843,20 @@ jobs:
 =======
   indy_plenum:
     name: Indy Plenum Tests
+=======
+  indy_plenum_module_tests:
+    name: Module Tests
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     # Reference to workflow-setup job is required to access the GITHUB_REPOSITORY_NAME output.
     needs: [workflow-setup, build-image]
     runs-on: ubuntu-20.04
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:ubuntu-16-04
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     strategy:
       matrix:
         module: [common, crypto, ledger, state, storage, stp_core, stp_zmq]
@@ -707,8 +868,11 @@ jobs:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Cache pip
         uses: actions/cache@v2
         with:
@@ -719,6 +883,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+<<<<<<< HEAD
 <<<<<<< HEAD
       - name: Install dependencies
         run: |
@@ -744,6 +909,12 @@ jobs:
       - name: Install dependencies
         run: pip install .[tests]
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      - name: Install dependencies
+        run: |
+          # Explicitly use the existing pip cache location in the plenum-build image.
+          pip --cache-dir /root/.cache/pip install .[tests]
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
 
       - name: Run Indy Plenum ${{ matrix.module }} tests
         run: python3 -m pytest -l -vv --junitxml=test-result-plenum-${{ matrix.module }}.xml ${{ matrix.module }}
@@ -821,20 +992,27 @@ jobs:
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
 
-  build_plenum_release:
-    name: Indy Plenum Release
-    needs: [workflow-setup, indy_plenum, indy_plenum_tests, lint]
+  build_release:
+    name: Build Release
+    needs: [workflow-setup, indy_plenum_tests, indy_plenum_module_tests, lint]
     runs-on: ubuntu-20.04
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build
     strategy:
       fail-fast: false
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:ubuntu-16-04
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     steps:
       - name: Check out code
         uses: actions/checkout@v1
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Set Build Version
         id: version
         uses: ./.github/actions/set-version
@@ -844,6 +1022,7 @@ jobs:
           isRC: ${{ needs.workflow-setup.outputs.isRC }}
 
       - name: Build Deployment Package
+<<<<<<< HEAD
         run: |
           mkdir -p /tmp/plenum-build
 <<<<<<< HEAD
@@ -857,11 +1036,17 @@ jobs:
           mkdir -p /tmp/plenum-build
           ./build-scripts/ubuntu-1604/build-indy-plenum.sh /__w/indy-plenum/indy-plenum 1.14.0 /tmp/plenum-build
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+        run: |
+          mkdir -p /tmp/plenum-build
+          ./build-scripts/ubuntu-1604/build-indy-plenum.sh "/__w/indy-plenum/indy-plenum" "${{ steps.version.outputs.upstreamVer }}" "/tmp/plenum-build" "${{ steps.version.outputs.pkgVer }}"
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
 
       - uses: actions/upload-artifact@v2
         with:
           name: plenum-deb
           path: /tmp/plenum-build
+<<<<<<< HEAD
 <<<<<<< HEAD
           retention-days: 5
 
@@ -879,16 +1064,23 @@ jobs:
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
+=======
+          retention-days: 5
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
 
-  build_plenum_3rd_party_dependencies:
-    name: Indy Plenum 3rd Party Dependencies
-    needs: [workflow-setup, indy_plenum, indy_plenum_tests, lint]
+  build_3rd_party_dependencies:
+    name: Build 3rd Party Dependencies
+    needs: [workflow-setup, indy_plenum_tests, indy_plenum_module_tests, lint]
     runs-on: ubuntu-20.04
     container:
+<<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build
     strategy:
       fail-fast: false
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:ubuntu-16-04
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -907,6 +1099,7 @@ jobs:
       - name: Build 3rd party deployment packages
         if: steps.third-party-dependencies.outputs.cache-hit != 'true'
         run: |
+<<<<<<< HEAD
 <<<<<<< HEAD
           mkdir -p ./build-scripts/ubuntu-1604/cache/3rd-party-dependencies/
           ./build-scripts/ubuntu-1604/build-3rd-parties.sh ./cache/3rd-party-dependencies
@@ -1024,18 +1217,24 @@ jobs:
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
           mkdir -p ./build-scripts/ubuntu-1604/cache/3rd-party-dependencies/  
+=======
+          mkdir -p ./build-scripts/ubuntu-1604/cache/3rd-party-dependencies/
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           ./build-scripts/ubuntu-1604/build-3rd-parties.sh ./cache/3rd-party-dependencies
           mv ./build-scripts/ubuntu-1604/cache/* /tmp/third-party-dependencies
 
-
-  publish_plenum_artifacts:
-    name: Publish artifacts
+  publish_artifacts:
+    name: Publish Artifacts
     runs-on: ubuntu-20.04
-    needs: ['workflow-setup', 'build_plenum_release', 'build_plenum_3rd_party_dependencies']
+    needs: [workflow-setup, build_release, build_3rd_party_dependencies]
+    if: needs.workflow-setup.outputs.publish == 'true'
     env:
       GITHUB_REF: ${{ needs.workflow-setup.outputs.GITHUB_REF }}
+<<<<<<< HEAD
     if: github.event_name == 'push' && ( github.ref  == 'refs/heads/master' || github.ref  == 'refs/heads/release*' )
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -1056,13 +1255,18 @@ jobs:
           # to ensure everything has been setup correctly.
 =======
         uses: jfrog/setup-jfrog-cli@v1
-        env: 
+        env:
           JF_ARTIFACTORY_1: ${{ secrets.INDY_ARTIFACTORY_REPO_CONFIG }}
 
-      - name: Ping JFrog server
+      - name: Ping Artifactory
         run: |
+<<<<<<< HEAD
           # Ping the JFrog Artifactory server of Hyperledger
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+          # Test the connection to Ping the Hyperledger Artifactory server
+          # to ensure everything has been setup correctly.
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           jfrog rt ping
 
       - name: Download Plenum Artifacts from Pipeline Artifacts
@@ -1072,10 +1276,14 @@ jobs:
           path: to_publish
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
       - name: Publish Plenum Artifacts
         uses: ./.github/actions/publish-deb
         with:
           sourceDirectory: /home/runner/work/indy-plenum/indy-plenum/to_publish
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
           distribution: xenial
@@ -1095,6 +1303,12 @@ jobs:
 
       - name: Download 3rd Party Artifacts from Cache
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+          distribution: xenial
+          component: ${{ env.GITHUB_REF }}
+
+      - name: Download 3rd Party Artifacts Dependencies from Cache
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
         id: third-party-dependencies
         uses: actions/cache@v2
         with:
@@ -1158,11 +1372,8 @@ jobs:
           key: third-party-dependencies-${{ hashFiles('./build-scripts/ubuntu-1604/build-3rd-parties.sh') }}
           restore-keys: |
             third-party-dependencies-
-      
-      - name: Upload 3rd Party Artifacts
-        run: |
-          jfrog rt u --deb xenial/${{ env.GITHUB_REF }}/amd64 --spec .github/workflows/publish/upload-3rd-parties-spec.json --spec-vars "RELEASE=${{ env.GITHUB_REF }}"
 
+<<<<<<< HEAD
 
 
 
@@ -1171,3 +1382,11 @@ jobs:
 
    
 >>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
+=======
+      - name: Publish 3rd Party Dependencies
+        uses: ./.github/actions/publish-deb
+        with:
+          sourceDirectory: /home/runner/tmp/third-party-dependencies
+          distribution: xenial
+          component: ${{ env.GITHUB_REF }}
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)

@@ -2,5 +2,9 @@
 * text=auto
 
 # Declare files that will always have LF line endings on checkout.
+<<<<<<< HEAD
 **/publishPackages text eol=lf
 *.sh text eol=LF
+=======
+**/publishPackages text eol=lf
+>>>>>>> fa677e7d (Update CD workflow and package publishing)

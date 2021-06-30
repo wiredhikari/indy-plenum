@@ -27,10 +27,14 @@ for name in ${fileList}; do
     --deb ${distribution}/${component}/${architecture} \
     --spec ${uploadSpec}\
 <<<<<<< HEAD
+<<<<<<< HEAD
     --spec-vars "SOURCE_DIR=${sourceDirectory};PACKAGE_NAME=${name};COMPONENT=${component};PACKAGE_STARTING_LETTER=${startingLetter};PACKAGE_SHORT_NAME=${shortName};DISTRIBUTION=${distribution}" \
 =======
     --spec-vars "SOURCE_DIR=${sourceDirectory};PACKAGE_NAME=${name};COMPONENT=${component};PACKAGE_STARTING_LETTER=${startingLetter};PACKAGE_SHORT_NAME=${shortName}" \
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+    --spec-vars "SOURCE_DIR=${sourceDirectory};PACKAGE_NAME=${name};COMPONENT=${component};PACKAGE_STARTING_LETTER=${startingLetter};PACKAGE_SHORT_NAME=${shortName}" \
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     --detailed-summary
   echo "====================================================================================================================="
   echo

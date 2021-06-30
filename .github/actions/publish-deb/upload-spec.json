@@ -3,10 +3,14 @@
     {
       "pattern": "${SOURCE_DIR}/${PACKAGE_NAME}",
 <<<<<<< HEAD
+<<<<<<< HEAD
       "target": "indy/pool/${DISTRIBUTION}/${COMPONENT}/${PACKAGE_STARTING_LETTER}/${PACKAGE_SHORT_NAME}/"
 =======
       "target": "indy/pool/${COMPONENT}/${PACKAGE_STARTING_LETTER}/${PACKAGE_SHORT_NAME}/"
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+      "target": "indy/pool/${COMPONENT}/${PACKAGE_STARTING_LETTER}/${PACKAGE_SHORT_NAME}/"
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     }
   ]
 }

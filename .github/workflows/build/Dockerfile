@@ -2,6 +2,7 @@ FROM hyperledger/indy-core-baseci:0.0.3-master
 LABEL maintainer="Hyperledger <hyperledger-indy@lists.hyperledger.org>"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 \
     && apt-get update -y \
     && apt-get install -y \
@@ -10,6 +11,11 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 \
     libindy=1.16.0~1636-xenial \
 =======
 RUN apt-get update -y && apt-get install -y \
+=======
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 \
+    && apt-get update -y \
+    && apt-get install -y \
+>>>>>>> 5d342ce9 (Update CD workflow and package publishing)
     python3-nacl \
     libindy-crypto=0.4.5 \
     libindy=1.15.0~1625 \
