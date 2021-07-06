@@ -27,18 +27,28 @@ RUN apt-get update -y && apt-get install -y \
     rubygems \
     gcc \
 <<<<<<< HEAD
+<<<<<<< HEAD
     make \
 # zstd is needed for caching in github actions pipeline
     zstd
 =======
     make 
 >>>>>>> 88b1c363 (Bump libindy ver 1.15.0~1625 for GitHub-Actions)
+=======
+    make \
+# zstd is needed for caching in github actions pipeline
+    zstd
+>>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
 
 # install fpm
 RUN gem install --no-ri --no-rdoc rake fpm
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 RUN indy_image_clean
 =======
 RUN indy_image_clean
 >>>>>>> 88b1c363 (Bump libindy ver 1.15.0~1625 for GitHub-Actions)
+=======
+RUN indy_image_clean
+>>>>>>> 48a28ddb (publishing artifacts to jfrog artifactory)
