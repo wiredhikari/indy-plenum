@@ -190,7 +190,18 @@ setup(
                         'jsonpickle',
                         # 'leveldb==0.201',
                         'leveldb',
+<<<<<<< HEAD
                         # Pinned because of changing size of `crypto_sign_SECRETKEYBYTES` from 32 to 64
+=======
+                        'ioflo==1.5.4',
+                        'semver==2.7.9',
+                        'base58==1.0.0',
+                        'orderedset==2.0.3',
+                        'sortedcontainers==1.5.7',
+                        'psutil==5.6.6',
+                        'importlib_metadata>=2.0',
+                        'portalocker==0.5.7',
+>>>>>>> 4cd59f88 (remove pip imports in favor of importlib_metadata)
                         'libnacl==1.6.1',
                         # 'msgpack-python==0.5.6',
                         'msgpack-python',
