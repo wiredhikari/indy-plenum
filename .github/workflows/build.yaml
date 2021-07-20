@@ -1145,6 +1145,7 @@ jobs:
           path: /tmp/dist
           retention-days: 5
 
+<<<<<<< HEAD
 =======
           key: ${{ format('third-party-dependencies-{0}', hashFiles(format('./build-scripts/{0}/build-3rd-parties.sh', needs.workflow-setup.outputs.UBUNTU_VERSION ))) }}           
    
@@ -1222,11 +1223,13 @@ jobs:
 >>>>>>> 5d342ce9 (Update CD workflow and package publishing)
           ./build-scripts/ubuntu-1604/build-3rd-parties.sh ./cache/3rd-party-dependencies
           mv ./build-scripts/ubuntu-1604/cache/* /tmp/third-party-dependencies
+=======
+>>>>>>> 6db6706a (added build_python_packages and publishing to PyPI to CD workflow)
 
   publish_artifacts:
     name: Publish Artifacts
     runs-on: ubuntu-20.04
-    needs: [workflow-setup, build_release, build_3rd_party_dependencies]
+    needs: [workflow-setup, build_release, build_3rd_party_dependencies, build-python-packages]
     if: needs.workflow-setup.outputs.publish == 'true'
     env:
       GITHUB_REF: ${{ needs.workflow-setup.outputs.GITHUB_REF }}
@@ -1389,4 +1392,19 @@ jobs:
           sourceDirectory: /home/runner/tmp/third-party-dependencies
           distribution: xenial
           component: ${{ env.GITHUB_REF }}
+<<<<<<< HEAD
 >>>>>>> 5d342ce9 (Update CD workflow and package publishing)
+=======
+
+      - name: Download Python Packages from Pipeline Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: plenum-python
+          path: dist
+
+      - name: Publish Python Package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+>>>>>>> 6db6706a (added build_python_packages and publishing to PyPI to CD workflow)

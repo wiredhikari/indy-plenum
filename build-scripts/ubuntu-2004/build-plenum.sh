@@ -12,7 +12,11 @@ TMP_DIR=$(mktemp -d)
 cp -r ${INPUT_PATH}/. ${TMP_DIR}
 
 # prepare the sources
+<<<<<<< HEAD:build-scripts/ubuntu-2004/build-plenum.sh
 cd ${TMP_DIR}/build-scripts/ubuntu-2004
+=======
+cd ${TMP_DIR}/build-scripts/ubuntu-1604
+>>>>>>> 3cbbc6d1 (added build_python_packages and publishing to PyPI to CD workflow):build-scripts/ubuntu-1604/build-indy-plenum.sh
 ./prepare-package.sh ${TMP_DIR} plenum ${VERSION} debian-packages
 
 sed -i 's/{package_name}/'${PACKAGE_NAME}'/' "postinst"
