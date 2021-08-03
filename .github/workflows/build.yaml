@@ -9,51 +9,67 @@ jobs:
 on:
   push:
     branches:
-      - master
-      - gha-ubuntu-20.04
-      - ubuntu-20.04
+      # - master
       - ubuntu-20.04-upgrade
+
   pull_request:
     branches:
-      - master
-      - gha-ubuntu-20.04
-      - ubuntu-20.04
+      # - master
       - ubuntu-20.04-upgrade
+            
 jobs:
   workflow-setup:
+<<<<<<< HEAD
 >>>>>>> 8eeeb136 (initial commit)
+=======
+    name: Initialize Workflow
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     runs-on: ubuntu-latest
     outputs:
       CACHE_KEY_BUILD: ${{ steps.cache.outputs.CACHE_KEY_BUILD }}
       CACHE_KEY_LINT: ${{ steps.cache.outputs.CACHE_KEY_LINT }}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       DOCKER_FILE_POSTFIX: ${{ steps.cache.outputs.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      UBUNTU_VERSION: ${{ steps.cache.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       # Expose the lowercase version of the GitHub repository name
       # to all subsequent jobs that reference image repositories
       # as the push and pull operations require the URL of the repository
       # to be in lowercase.
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       GITHUB_REPOSITORY_NAME: ${{ steps.repository-name.outputs.lowercase }}
       GITHUB_REF: ${{ steps.cache.outputs.GITHUB_REF }}
       isDev: ${{ steps.build-flags.outputs.isDev }}
       isRC: ${{ steps.build-flags.outputs.isRC }}
       publish: ${{ steps.build-flags.outputs.publish }}
+<<<<<<< HEAD
 =======
       GITHUB_REPOSITORY_NAME: ${{ steps.cache.outputs.GITHUB_REPOSITORY_NAME }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       - name: Convert the GitHub repository name to lowercase
         id: repository-name
         uses: ASzc/change-string-case-action@v1
         with:
           string: ${{ github.repository }}
 
+<<<<<<< HEAD
       - name: Set outputs
         id: cache
         run: |
@@ -96,29 +112,67 @@ jobs:
   build-image:
     name: Create Builder Image
 =======
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       - name: Set outputs
         id: cache
         run: |
-          # Convert the GitHub repository name to lowercase
-          echo "::set-output name=GITHUB_REPOSITORY_NAME::$(echo ${GITHUB_REPOSITORY,,})"
           # Set variables according to version of ubuntu
           if [[ "${{github.base_ref}}" == "master" || "${{github.ref}}" == "refs/heads/master" ]]; then
-            echo "::set-output name=CACHE_KEY_BUILD::${{ hashFiles('.github/workflows/build/Dockerfile.ubuntu-16-04') }}"
-            echo "::set-output name=CACHE_KEY_LINT::${{ hashFiles('.github/workflows/lint/Dockerfile.ubuntu-16-04') }}"
-            echo "::set-output name=DOCKER_FILE_POSTFIX::ubuntu-16-04"
+            echo "::set-output name=CACHE_KEY_BUILD::${{ hashFiles('.github/workflows/build/Dockerfile.ubuntu-1604') }}"
+            echo "::set-output name=CACHE_KEY_LINT::${{ hashFiles('.github/workflows/lint/Dockerfile.ubuntu-1604') }}"
+            echo "::set-output name=UBUNTU_VERSION::ubuntu-1604"
           fi
-          if [[ "${{github.base_ref}}" == "ubuntu-20.04" || "${{github.ref}}" == "refs/heads/ubuntu-20.04" ||  "${{github.base_ref}}" == "ubuntu-20.04-upgrade" || "${{github.ref}}" == "refs/heads/ubuntu-20.04-upgrade" ]]; then
-            echo "::set-output name=CACHE_KEY_BUILD::${{ hashFiles('.github/workflows/build/Dockerfile.ubuntu-20-04') }}"
-            echo "::set-output name=CACHE_KEY_LINT::${{ hashFiles('.github/workflows/lint/Dockerfile.ubuntu-20-04') }}"
-            echo "::set-output name=DOCKER_FILE_POSTFIX::ubuntu-20-04"
+          if [[ "${{github.base_ref}}" == "ubuntu-20.04-upgrade" || "${{github.ref}}" == "refs/heads/ubuntu-20.04-upgrade" ]]; then
+            echo "::set-output name=CACHE_KEY_BUILD::${{ hashFiles('.github/workflows/build/Dockerfile.ubuntu-2004') }}"
+            echo "::set-output name=CACHE_KEY_LINT::${{ hashFiles('.github/workflows/lint/Dockerfile.ubuntu-2004') }}"
+            echo "::set-output name=UBUNTU_VERSION::ubuntu-2004"
+          fi
+
+          if [[ "${{github.base_ref}}" == 'master' || "${{github.ref}}" == 'refs/heads/master' || "${{github.base_ref}}" == 'main' || "${{github.ref}}" == 'refs/heads/main' ]]; then
+            echo "::set-output name=GITHUB_REF::main"
+          elif [[ "${{github.base_ref}}" == 'release*' || "${{github.ref}}" == 'refs/heads/release*' ]]; then
+            echo "::set-output name=GITHUB_REF::rc"
+          elif [[ "${{github.base_ref}}" == 'stable' || "${{github.ref}}" == 'refs/heads/stable' ]]; then
+            echo "::set-output name=GITHUB_REF::stable"
+          else
+            echo "::set-output name=GITHUB_REF::dev"
+          fi
+
+      - name: Set build flags
+        id: build-flags
+        run: |
+
+          if [[ "${{steps.cache.outputs.GITHUB_REF}}" == 'dev' || "${{steps.cache.outputs.GITHUB_REF}}" == 'main' ]]; then
+            echo "::set-output name=isDev::true"
+          else
+            echo "::set-output name=isDev::false"
+          fi
+
+          if [[ "${{steps.cache.outputs.GITHUB_REF}}" == 'rc' ]]; then
+            echo "::set-output name=isRC::true"
+          else
+            echo "::set-output name=isRC::false"
+          fi
+
+          # Ensure publishing is only performed when the build is executed from the main (hyperledger/indy-plenum) repository.
+          if [[ ${{github.event.repository.full_name}} == 'hyperledger/indy-plenum' && ${{github.event_name}} == 'push' && ( ${{steps.cache.outputs.GITHUB_REF}} == 'main' || ${{steps.cache.outputs.GITHUB_REF}} == 'rc' || ${{steps.cache.outputs.GITHUB_REF}} == 'stable' ) ]]; then
+            echo "::set-output name=publish::true"
+          else
+            echo "::set-output name=publish::false"
           fi
 
   build-image:
+<<<<<<< HEAD
 >>>>>>> 8eeeb136 (initial commit)
+=======
+    name: Create Builder Image
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     # Reference to workflow-setup job is required to access its various outputs.
     needs: workflow-setup
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
 <<<<<<< HEAD
       CACHE_KEY_BUILD: ${{ needs.workflow-setup.outputs.CACHE_KEY_BUILD }}
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
@@ -128,15 +182,24 @@ jobs:
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      CACHE_KEY_BUILD: ${{ needs.workflow-setup.outputs.CACHE_KEY_BUILD }}
+      GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Try load from cache
 =======
       - name: Try load from cache.
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      - name: Try load from cache
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
         id: cache-image
         uses: actions/cache@v2
         with:
@@ -144,14 +207,21 @@ jobs:
           key: ${{ env.CACHE_KEY_BUILD}}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       - name: Prepare image labels and tags
         if: steps.cache-image.outputs.cache-hit != 'true'
         id: prep
         shell: bash
         run: |
           DOCKER_IMAGE=ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build
+<<<<<<< HEAD
           # ToDo - Update hard coded 'ubuntu-16-04' tag when integrating these flows with the ubuntu-20.04-upgrade branch.
           TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:ubuntu-16-04"
+=======
+          TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:${{ env.UBUNTU_VERSION }}"
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
           echo ::set-output name=tags::${TAGS}
           echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 
@@ -172,7 +242,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+<<<<<<< HEAD
           file: .github/workflows/build/Dockerfile
+=======
+          file: .github/workflows/build/Dockerfile.${{ env.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
           no-cache: true
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
@@ -182,6 +256,7 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
 
       - name: Touch Cache
+<<<<<<< HEAD
         if: steps.cache-image.outputs.cache-hit != 'true'
         run: |
 =======
@@ -193,18 +268,27 @@ jobs:
           docker tag ${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.CACHE_KEY_BUILD }} ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.DOCKER_FILE_POSTFIX }}
           docker push ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        run: |
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
           mkdir -p ${GITHUB_WORKSPACE}/cache
           touch ${GITHUB_WORKSPACE}/cache/${{ env.CACHE_KEY_BUILD }}
 
   lint-image:
 <<<<<<< HEAD
+<<<<<<< HEAD
     name: Create Linter Image
 =======
 >>>>>>> 8eeeb136 (initial commit)
+=======
+    name: Create Linter Image
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     # Reference to workflow-setup job is required to access its various outputs.
     needs: workflow-setup
     runs-on: ubuntu-latest
     env:
+<<<<<<< HEAD
 <<<<<<< HEAD
       CACHE_KEY_LINT: ${{ needs.workflow-setup.outputs.CACHE_KEY_LINT }}
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
@@ -214,19 +298,29 @@ jobs:
       GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      CACHE_KEY_LINT: ${{ needs.workflow-setup.outputs.CACHE_KEY_LINT }}
+      GITHUB_REPOSITORY_NAME: ${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Try load from cache
 =======
       - name: Try load from cache.
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      - name: Try load from cache
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
         id: cache-image
         uses: actions/cache@v2
         with:
           path: ${GITHUB_WORKSPACE}/cache
+<<<<<<< HEAD
 <<<<<<< HEAD
           key: ${{ env.CACHE_KEY_LINT }}
 
@@ -272,25 +366,71 @@ jobs:
         run: |
 =======
           key: ${{ env.CACHE_KEY_LINT}}
+=======
+          key: ${{ env.CACHE_KEY_LINT }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
-      - name: If NOT found in cache, build and push image.
+      - name: Prepare image labels and tags
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        id: prep
+        shell: bash
+        run: |
+          DOCKER_IMAGE=ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint
+          TAGS="${DOCKER_IMAGE}:latest,${DOCKER_IMAGE}:${{ env.UBUNTU_VERSION }}"
+          echo ::set-output name=tags::${TAGS}
+          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+      - name: Log into the GitHub Container Registry
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build and push image
+        if: steps.cache-image.outputs.cache-hit != 'true'
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: .github/workflows/lint/Dockerfile.${{ env.UBUNTU_VERSION }}
+          no-cache: true
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.prep.outputs.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.event.repository.html_url }}
+            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+      - name: Touch Cache
         if: steps.cache-image.outputs.cache-hit != 'true'
         run: |
+<<<<<<< HEAD
           export GITHUB_REPOSITORY_NAME=$(echo ${GITHUB_REPOSITORY,,})
           echo ${{ secrets.CR_PAT }} | docker login ghcr.io --username ${{ secrets.CR_USER }} --password-stdin
           docker build -f .github/workflows/lint/Dockerfile.${{ env.DOCKER_FILE_POSTFIX }} --no-cache -t ${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.CACHE_KEY_LINT }} .
           docker tag ${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.CACHE_KEY_LINT }} ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.DOCKER_FILE_POSTFIX }}
           docker push ghcr.io/${{ env.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
           mkdir -p ${GITHUB_WORKSPACE}/cache
           touch ${GITHUB_WORKSPACE}/cache/${{ env.CACHE_KEY_LINT }}
 
   indy_plenum_tests:
 <<<<<<< HEAD
+<<<<<<< HEAD
     name: Sliced Module Tests
 =======
     name: Indy Plenum Test Slices
 >>>>>>> 8eeeb136 (initial commit)
+=======
+    name: Sliced Module Tests
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     # Reference to workflow-setup job is required to access the GITHUB_REPOSITORY_NAME output.
     needs: [workflow-setup, build-image]
     runs-on: ubuntu-20.04
@@ -305,6 +445,7 @@ jobs:
 =======
 =======
       NODE_OPTIONS: "--max_old_space_size=4096"
+<<<<<<< HEAD
 >>>>>>> 723d39da (Ensure that test reports are published consistently.)
       DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
     container:
@@ -314,6 +455,11 @@ jobs:
 =======
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
 >>>>>>> 790bff42 (change env to direct output variable)
+=======
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+    container:
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     strategy:
       matrix:
         module: [plenum]
@@ -327,6 +473,9 @@ jobs:
         uses: actions/checkout@v2
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       - name: Cache pip
         uses: actions/cache@v2
         with:
@@ -337,6 +486,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+<<<<<<< HEAD
       - name: Install dependencies
         run: |
           # Explicitly use the existing pip cache location in the plenum-build image.
@@ -345,6 +495,13 @@ jobs:
       - name: Install dependencies
         run: pip install .[tests]
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      - name: Install dependencies
+        run: |
+          # Explicitly use the existing pip cache location in the plenum-build image.
+          # pip --cache-dir /root/.cache/pip install .[tests]
+          pip install .[tests]
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
       - name: Run Indy Plenum ${{ matrix.module }} test slice ${{ matrix.slice }}/${{ strategy.job-total }}
         id: plenum-test
@@ -368,6 +525,7 @@ jobs:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       - name: Upload Detailed Test Failure Results
 =======
       - name: 'Upload Detailed Test Failure Results'
@@ -375,6 +533,9 @@ jobs:
 =======
       - name: "Upload Detailed Test Failure Results"
 >>>>>>> 723d39da (Ensure that test reports are published consistently.)
+=======
+      - name: Upload Detailed Test Failure Results
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
         # The test runner only emits the detailed test results if the tests fail.
         if: (steps.plenum-test.outcome == 'failure') && failure()
         uses: actions/upload-artifact@v2
@@ -383,6 +544,7 @@ jobs:
           path: test-result-plenum-${{ matrix.slice }}.txt
           retention-days: 5
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   indy_plenum_module_tests:
     name: Module Tests
@@ -394,18 +556,26 @@ jobs:
 =======
   indy_plenum:
     name: Indy Plenum Tests
+=======
+  indy_plenum_module_tests:
+    name: Module Tests
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     # Reference to workflow-setup job is required to access the GITHUB_REPOSITORY_NAME output.
     needs: [workflow-setup, build-image]
     runs-on: ubuntu-20.04
     env:
-      DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
     container:
+<<<<<<< HEAD
 <<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
 =======
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
 >>>>>>> 790bff42 (change env to direct output variable)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     strategy:
       matrix:
         module: [common, crypto, ledger, state, storage, stp_core, stp_zmq]
@@ -415,6 +585,9 @@ jobs:
         uses: actions/checkout@v2
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
       - name: Cache pip
         uses: actions/cache@v2
         with:
@@ -425,6 +598,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
+<<<<<<< HEAD
       - name: Install dependencies
         run: |
           # Explicitly use the existing pip cache location in the plenum-build image.
@@ -433,6 +607,13 @@ jobs:
       - name: Install dependencies
         run: pip install .[tests]
 >>>>>>> 8eeeb136 (initial commit)
+=======
+      - name: Install dependencies
+        run: |
+          # Explicitly use the existing pip cache location in the plenum-build image.
+          # pip --cache-dir /root/.cache/pip install .[tests]
+          pip install .[tests]
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
       - name: Run Indy Plenum ${{ matrix.module }} tests
         run: python3 -m pytest -l -vv --junitxml=test-result-plenum-${{ matrix.module }}.xml ${{ matrix.module }}
@@ -462,14 +643,18 @@ jobs:
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-lint:ubuntu-18-04
 =======
     env:
-      DOCKER_FILE_POSTFIX: ${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
     container:
+<<<<<<< HEAD
 <<<<<<< HEAD
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ env.DOCKER_FILE_POSTFIX }}
 >>>>>>> 8eeeb136 (initial commit)
 =======
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ needs.workflow-setup.outputs.DOCKER_FILE_POSTFIX }}
 >>>>>>> 790bff42 (change env to direct output variable)
+=======
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-lint:${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Check out code
         uses: actions/checkout@v2
@@ -477,13 +662,23 @@ jobs:
       - name: flake8
         run: python3 -m flake8
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
   build_release:
     name: Build Release
     needs: [workflow-setup, indy_plenum_tests, indy_plenum_module_tests, lint]
     runs-on: ubuntu-20.04
+<<<<<<< HEAD
     container:
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:ubuntu-16-04
+=======
+    env:
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+    container:
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -499,7 +694,11 @@ jobs:
       - name: Build Deployment Package
         run: |
           mkdir -p /tmp/plenum-build
+<<<<<<< HEAD
           ./build-scripts/ubuntu-1604/build-indy-plenum.sh "/__w/indy-plenum/indy-plenum" "${{ steps.version.outputs.upstreamVer }}" "/tmp/plenum-build" "${{ steps.version.outputs.pkgVer }}"
+=======
+          ./build-scripts/${{ env.UBUNTU_VERSION }}/build-indy-plenum.sh "/__w/indy-plenum/indy-plenum" "${{ steps.version.outputs.upstreamVer }}" "/tmp/plenum-build" "${{ steps.version.outputs.pkgVer }}"
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
       - uses: actions/upload-artifact@v2
         with:
@@ -511,8 +710,15 @@ jobs:
     name: Build 3rd Party Dependencies
     needs: [workflow-setup, indy_plenum_tests, indy_plenum_module_tests, lint]
     runs-on: ubuntu-20.04
+<<<<<<< HEAD
     container:
       image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:ubuntu-16-04
+=======
+    env:
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+    container:
+      image: ghcr.io/${{ needs.workflow-setup.outputs.GITHUB_REPOSITORY_NAME }}/plenum-build:${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Check out code
         uses: actions/checkout@v1
@@ -522,6 +728,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/third-party-dependencies
+<<<<<<< HEAD
           key: third-party-dependencies-${{ hashFiles('./build-scripts/ubuntu-1604/build-3rd-parties.sh') }}
 
       - name: Build 3rd party deployment packages
@@ -571,20 +778,42 @@ jobs:
           path: /tmp/dist
           retention-days: 5
 
+=======
+          key: ${{ format('third-party-dependencies-{0}', hashFiles(format('./build-scripts/{0}/build-3rd-parties.sh', needs.workflow-setup.outputs.UBUNTU_VERSION ))) }}           
+   
+      - name: Build 3rd party deployment packages
+        if: steps.third-party-dependencies.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ./build-scripts/${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}/cache/3rd-party-dependencies/
+          ./build-scripts/${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}/build-3rd-parties.sh ./cache/3rd-party-dependencies
+          mv ./build-scripts/${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}/cache/* /tmp/third-party-dependencies
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
   publish_artifacts:
     name: Publish Artifacts
     runs-on: ubuntu-20.04
+<<<<<<< HEAD
     needs: [workflow-setup, build_release, build_3rd_party_dependencies, build-python-packages]
     if: needs.workflow-setup.outputs.publish == 'true'
     env:
       GITHUB_REF: ${{ needs.workflow-setup.outputs.GITHUB_REF }}
+=======
+    needs: [workflow-setup, build_release, build_3rd_party_dependencies]
+    if: needs.workflow-setup.outputs.publish == 'true'
+    env:
+      GITHUB_REF: ${{ needs.workflow-setup.outputs.GITHUB_REF }}
+      UBUNTU_VERSION: ${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     steps:
       - name: Check out code
         uses: actions/checkout@v1
 
       - name: Setup JFrog CLI
+<<<<<<< HEAD
         uses: jfrog/setup-jfrog-cli@v2
+=======
+        uses: jfrog/setup-jfrog-cli@v1
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
         env:
           JF_ARTIFACTORY_1: ${{ secrets.INDY_ARTIFACTORY_REPO_CONFIG }}
 
@@ -604,7 +833,11 @@ jobs:
         uses: ./.github/actions/publish-deb
         with:
           sourceDirectory: /home/runner/work/indy-plenum/indy-plenum/to_publish
+<<<<<<< HEAD
           distribution: xenial
+=======
+          distribution: focal
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
           component: ${{ env.GITHUB_REF }}
 
       - name: Download 3rd Party Artifacts Dependencies from Cache
@@ -612,7 +845,11 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/third-party-dependencies
+<<<<<<< HEAD
           key: third-party-dependencies-${{ hashFiles('./build-scripts/ubuntu-1604/build-3rd-parties.sh') }}
+=======
+          key: third-party-dependencies-${{ hashFiles('./build-scripts/${{ env.UBUNTU_VERSION }}/build-3rd-parties.sh') }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
           restore-keys: |
             third-party-dependencies-
 
@@ -620,6 +857,7 @@ jobs:
         uses: ./.github/actions/publish-deb
         with:
           sourceDirectory: /home/runner/tmp/third-party-dependencies
+<<<<<<< HEAD
           distribution: xenial
           component: ${{ env.GITHUB_REF }}
 
@@ -637,3 +875,7 @@ jobs:
           skip_existing: true
 =======
 >>>>>>> 8eeeb136 (initial commit)
+=======
+          distribution: focal
+          component: ${{ env.GITHUB_REF }}
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)

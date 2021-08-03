@@ -26,7 +26,11 @@ for name in ${fileList}; do
   jfrog rt u \
     --deb ${distribution}/${component}/${architecture} \
     --spec ${uploadSpec}\
+<<<<<<< HEAD
     --spec-vars "SOURCE_DIR=${sourceDirectory};PACKAGE_NAME=${name};COMPONENT=${component};PACKAGE_STARTING_LETTER=${startingLetter};PACKAGE_SHORT_NAME=${shortName};DISTRIBUTION=${distribution}" \
+=======
+    --spec-vars "SOURCE_DIR=${sourceDirectory};PACKAGE_NAME=${name};COMPONENT=${component};PACKAGE_STARTING_LETTER=${startingLetter};PACKAGE_SHORT_NAME=${shortName}" \
+>>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
     --detailed-summary
   echo "====================================================================================================================="
   echo
