@@ -802,9 +802,50 @@ jobs:
           mv ./build-scripts/${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}/cache/* /tmp/third-party-dependencies
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 
+  build-python-packages:
+    name: Build Python Packages
+    runs-on: ubuntu-20.04
+    needs: [workflow-setup, indy_plenum_tests, indy_plenum_module_tests, lint]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install required packages via pip
+        run: |
+          python3 -m pip install pytest-runner wheel
+
+      - name: Set Build Version
+        id: version
+        uses: ./.github/actions/set-version
+        with:
+          moduleName: plenum
+          isDev: ${{ needs.workflow-setup.outputs.isDev }}
+          isRC: ${{ needs.workflow-setup.outputs.isRC }}
+
+      - name: Prepare package and set version
+        run: |
+          ./build-scripts/${{ needs.workflow-setup.outputs.UBUNTU_VERSION }}/prepare-package.sh . plenum "${{ steps.version.outputs.upstreamVer }}" python-packages
+
+      - name: Building python package
+        run: |
+          python3 setup.py sdist --dist-dir /tmp/dist bdist_wheel --dist-dir /tmp/dist
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: plenum-python
+          path: /tmp/dist
+          retention-days: 5
+
+
   publish_artifacts:
     name: Publish Artifacts
     runs-on: ubuntu-20.04
+<<<<<<< HEAD
 <<<<<<< HEAD
     needs: [workflow-setup, build_release, build_3rd_party_dependencies, build-python-packages]
     if: needs.workflow-setup.outputs.publish == 'true'
@@ -812,6 +853,9 @@ jobs:
       GITHUB_REF: ${{ needs.workflow-setup.outputs.GITHUB_REF }}
 =======
     needs: [workflow-setup, build_release, build_3rd_party_dependencies]
+=======
+    needs: [workflow-setup, build_release, build_3rd_party_dependencies, build-python-packages]
+>>>>>>> c7b97c0e (Ubuntu 20.04: Publishing of Python packages to PyPI)
     if: needs.workflow-setup.outputs.publish == 'true'
     env:
       GITHUB_REF: ${{ needs.workflow-setup.outputs.GITHUB_REF }}
@@ -894,6 +938,7 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+<<<<<<< HEAD
           skip_existing: true
 =======
 >>>>>>> 8eeeb136 (initial commit)
@@ -904,3 +949,6 @@ jobs:
 >>>>>>> c0409ff6 (Support publishing off a development branch)
           component: ${{ env.GITHUB_REF }}
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+
+>>>>>>> c7b97c0e (Ubuntu 20.04: Publishing of Python packages to PyPI)
