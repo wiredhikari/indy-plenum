@@ -907,6 +907,7 @@ jobs:
         with:
           path: /tmp/third-party-dependencies
 <<<<<<< HEAD
+<<<<<<< HEAD
           key: third-party-dependencies-${{ hashFiles('./build-scripts/ubuntu-1604/build-3rd-parties.sh') }}
 =======
           key: third-party-dependencies-${{ hashFiles('./build-scripts/${{ env.UBUNTU_VERSION }}/build-3rd-parties.sh') }}
@@ -916,6 +917,9 @@ jobs:
             third-party-dependencies-
 
 =======
+=======
+          key: ${{ format('third-party-dependencies-{0}', hashFiles(format('./build-scripts/{0}/build-3rd-parties.sh', needs.workflow-setup.outputs.UBUNTU_VERSION ))) }}           
+>>>>>>> 91569626 (fixed cache key of 3rd parties and pypi uploading existing packages)
           
 >>>>>>> 0df70955 (includes fixes based on the feedback of Wade)
       - name: Publish 3rd Party Dependencies
@@ -939,6 +943,7 @@ jobs:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
 <<<<<<< HEAD
+<<<<<<< HEAD
           skip_existing: true
 =======
 >>>>>>> 8eeeb136 (initial commit)
@@ -950,5 +955,8 @@ jobs:
           component: ${{ env.GITHUB_REF }}
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
+=======
+          skip_existing: true
+>>>>>>> 91569626 (fixed cache key of 3rd parties and pypi uploading existing packages)
 
 >>>>>>> c7b97c0e (Ubuntu 20.04: Publishing of Python packages to PyPI)
