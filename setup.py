@@ -118,6 +118,7 @@ setup(
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         'jsonpickle==0.9.6',
                         'ujson==1.33',
                         'prompt_toolkit==0.57',
@@ -179,6 +180,8 @@ setup(
                         'ioflo',
                         'semver',
 =======
+=======
+>>>>>>> a6f53227 (pinned dependencies because of missing support for python 3.5)
                         # 'base58==2.1.0',
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
                         'base58',
@@ -189,6 +192,14 @@ setup(
                         # 'jsonpickle==2.0.0',
                         'jsonpickle',
                         # 'leveldb==0.201',
+=======
+                        'jsonpickle==0.9.6',
+                        'ujson==1.33',
+                        'prompt_toolkit==0.57',
+                        'pygments==2.7.4',
+                        'rlp==0.5.1',
+                        'sha3==0.2.1',
+>>>>>>> 5bef3129 (pinned dependencies because of missing support for python 3.5)
                         'leveldb',
 <<<<<<< HEAD
                         # Pinned because of changing size of `crypto_sign_SECRETKEYBYTES` from 32 to 64
@@ -199,7 +210,7 @@ setup(
                         'orderedset==2.0.3',
                         'sortedcontainers==1.5.7',
                         'psutil==5.6.6',
-                        'importlib_metadata>=2.0',
+                        'importlib-metadata==2.1.1',
                         'portalocker==0.5.7',
 >>>>>>> 4cd59f88 (remove pip imports in favor of importlib_metadata)
                         'libnacl==1.6.1',

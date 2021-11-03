@@ -9,7 +9,11 @@ RUN echo "To invalidate cache"
 
 RUN apt-get update -y && apt-get install -y \
     python3-nacl \
+<<<<<<< HEAD
     libindy=1.16.0~1636-xenial \
+=======
+    libindy=1.15.0~1625-xenial \
+>>>>>>> a6f53227 (pinned dependencies because of missing support for python 3.5)
 # rocksdb python wrapper
     libbz2-dev \
     zlib1g-dev \
