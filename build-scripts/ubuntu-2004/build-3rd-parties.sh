@@ -99,8 +99,35 @@ pip install -r requirements.txt
 ### Issue 1551: Update RocksDB; https://github.com/hyperledger/indy-plenum/issues/1551
 build_rocksdb_deb 5.8.8
 
+<<<<<<< HEAD:build-scripts/ubuntu-2004/build-3rd-parties.sh
 #### PyZMQCommand
 build_from_pypi pyzmq 22.3.0 --zmq=bundled
+=======
+build_from_pypi ioflo 1.5.4
+build_from_pypi orderedset 2.0.3
+build_from_pypi base58 1.0.0
+build_from_pypi prompt-toolkit 0.57
+build_from_pypi rlp 0.5.1
+build_from_pypi sha3 0.2.1
+build_from_pypi libnacl 1.6.1
+build_from_pypi six 1.11.0
+build_from_pypi portalocker 0.5.7
+build_from_pypi sortedcontainers 1.5.7
+build_from_pypi setuptools 38.5.2
+build_from_pypi python-dateutil 2.6.1
+build_from_pypi semver 2.7.9
+build_from_pypi pygments 2.2.0
+build_from_pypi psutil 5.6.6
+build_from_pypi pyzmq 18.1.0 bundled
+build_from_pypi intervaltree 2.1.0
+build_from_pypi jsonpickle 0.9.6
+# TODO: add libsnappy dependency for python-rocksdb package
+build_from_pypi python-rocksdb 0.6.9
+build_from_pypi pympler 0.8
+build_from_pypi packaging 19.0
+build_from_pypi python-ursa 0.1.1
+build_from_pypi importlib-metadata 2.1.1
+>>>>>>> e2b8cc02 (added importlib-metadata as debian package):build-scripts/ubuntu-1604/build-3rd-parties.sh
 
 ##### install_requires
 build_from_pypi base58 
