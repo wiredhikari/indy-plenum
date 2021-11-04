@@ -113,7 +113,7 @@ build_from_pypi libnacl 1.6.1
 build_from_pypi six 1.11.0
 build_from_pypi portalocker 0.5.7
 build_from_pypi sortedcontainers 1.5.7
-build_from_pypi setuptools 38.5.2
+build_from_pypi setuptools 50.3.2
 build_from_pypi python-dateutil 2.6.1
 build_from_pypi semver 2.7.9
 build_from_pypi pygments 2.2.0
@@ -127,7 +127,14 @@ build_from_pypi pympler 0.8
 build_from_pypi packaging 19.0
 build_from_pypi python-ursa 0.1.1
 build_from_pypi importlib-metadata 2.1.1
+<<<<<<< HEAD:build-scripts/ubuntu-2004/build-3rd-parties.sh
 >>>>>>> e2b8cc02 (added importlib-metadata as debian package):build-scripts/ubuntu-1604/build-3rd-parties.sh
+=======
+# TODO: remove as install dependency because it is just needed for documentation
+build_from_pypi pygments 2.7.4
+# Is a dependency of importlib-metadata. In focal it is part of the Canonical archive
+build_from_pypi zipp 1.0.0
+>>>>>>> f5610461 (added pygments, and zipp as 3rd party artifacts and updated version of setuptools):build-scripts/ubuntu-1604/build-3rd-parties.sh
 
 ##### install_requires
 build_from_pypi base58 
