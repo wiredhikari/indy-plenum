@@ -133,8 +133,12 @@ build_from_pypi importlib-metadata 2.1.1
 # TODO: remove as install dependency because it is just needed for documentation
 build_from_pypi pygments 2.7.4
 # Is a dependency of importlib-metadata. In focal it is part of the Canonical archive
+<<<<<<< HEAD:build-scripts/ubuntu-2004/build-3rd-parties.sh
 build_from_pypi zipp 1.0.0
 >>>>>>> f5610461 (added pygments, and zipp as 3rd party artifacts and updated version of setuptools):build-scripts/ubuntu-1604/build-3rd-parties.sh
+=======
+build_from_pypi zipp 1.2.0
+>>>>>>> fbfd6721 (bump version of zipp to 1.2.0):build-scripts/ubuntu-1604/build-3rd-parties.sh
 
 ##### install_requires
 build_from_pypi base58 
