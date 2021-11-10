@@ -178,7 +178,8 @@ setup(
                         # 'base58==2.1.0',
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
                         'base58',
-                        'importlib_metadata>=2.0',
+                        # pinned because issue with fpm from v4.0.0
+                        'importlib_metadata==3.10.1',
                         # 'ioflo==2.0.2',
                         'ioflo',
                         # 'jsonpickle==2.0.0',
