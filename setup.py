@@ -30,6 +30,7 @@ with open(metadata['__file__'], 'r') as f:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 tests_require = ['attrs==19.1.0', 'pytest==3.3.1', 'pytest-xdist==1.22.1', 'pytest-forked==0.2',
                  'python3-indy==1.16.0-dev-1636', 'pytest-asyncio==0.8.0']
 =======
@@ -41,13 +42,22 @@ tests_require = ['attrs>=20.3.0', 'pytest>=6.2.2', 'pytest-xdist>=2.2.1', 'pytes
                  'python3-indy==1.13.0-dev-1420', 'pytest-asyncio>=0.14.0']
 >>>>>>> e26dcdb9 (updates setup.py with newer python package versions)
 =======
+=======
+>>>>>>> 5339e856 (bump indy-sdk to v. 1.16.0)
 tests_require = ['attrs==20.3.0', 'pytest==6.2.2', 'pytest-xdist==2.2.1', 'pytest-forked==1.3.0',
 <<<<<<< HEAD
                  'python3-indy==1.15.0-dev-1625', 'pytest-asyncio==0.14.0']
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
 =======
                  'python3-indy==1.16.0.post236', 'pytest-asyncio==0.14.0']
+<<<<<<< HEAD
 >>>>>>> 43161511 (fix: fix python3-indy requirement)
+=======
+=======
+tests_require = ['attrs==19.1.0', 'pytest==3.3.1', 'pytest-xdist==1.22.1', 'pytest-forked==0.2',
+                 'python3-indy==1.16.0', 'pytest-asyncio==0.8.0']
+>>>>>>> d9678de0 (bump indy-sdk to v. 1.16.0)
+>>>>>>> 5339e856 (bump indy-sdk to v. 1.16.0)
 
 
 class PyZMQCommand(distutils.cmd.Command):

@@ -9,6 +9,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 \
     python3-nacl \
     libindy-crypto=0.4.5 \
     libindy=1.16.0~1636-xenial \
+<<<<<<< HEAD
 =======
 RUN apt-get update -y && apt-get install -y \
 =======
@@ -20,6 +21,8 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88 \
     libindy-crypto=0.4.5 \
     libindy=1.15.0~1625 \
 >>>>>>> 88b1c363 (Bump libindy ver 1.15.0~1625 for GitHub-Actions)
+=======
+>>>>>>> 5339e856 (bump indy-sdk to v. 1.16.0)
 # rocksdb python wrapper
     libbz2-dev \
     zlib1g-dev \
