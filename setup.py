@@ -55,9 +55,16 @@ tests_require = ['attrs==20.3.0', 'pytest==6.2.2', 'pytest-xdist==2.2.1', 'pytes
 =======
 =======
 tests_require = ['attrs==19.1.0', 'pytest==3.3.1', 'pytest-xdist==1.22.1', 'pytest-forked==0.2',
+<<<<<<< HEAD
                  'python3-indy==1.16.0', 'pytest-asyncio==0.8.0']
 >>>>>>> d9678de0 (bump indy-sdk to v. 1.16.0)
+<<<<<<< HEAD
 >>>>>>> 5339e856 (bump indy-sdk to v. 1.16.0)
+=======
+=======
+                 'python3-indy==1.16.0-dev-1636', 'pytest-asyncio==0.8.0']
+>>>>>>> 1794e72f (Bump indy-sdk to 1.16.0-dev-1636 for the tests.)
+>>>>>>> b1bcaff2 (Bump indy-sdk to 1.16.0-dev-1636 for the tests.)
 
 
 class PyZMQCommand(distutils.cmd.Command):
