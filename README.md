@@ -29,6 +29,7 @@ start_indy_node Node4 0.0.0.0 9707 0.0.0.0 9708
 ![logo](indy-logo.png)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [Modified Indy Plenum for Network DIDs](#modified-indy-plenum-for-network-dids)
   - [Instructions to use it:](#instructions-to-use-it)
   - [Plenum Byzantine Fault Tolerant Protocol](#plenum-byzantine-fault-tolerant-protocol)
@@ -41,6 +42,9 @@ start_indy_node Node4 0.0.0.0 9707 0.0.0.0 9708
   - [How to Start Working with the Code](#how-to-start-working-with-the-code)
 =======
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://gitpod.io/#https://github.com/hyperledger/indy-plenum/tree/ubuntu-20.04-upgrade)
+=======
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/hyperledger/indy-plenum/tree/ubuntu-20.04-upgrade)
+>>>>>>> c194f7f1 (fixed typo in gitpodlink)
 
 
 * [Plenum Byzantine Fault Tolerant Protocol](#plenum-byzantine-fault-tolerant-protocol)
