@@ -108,7 +108,7 @@ setup(
                         'orderedset==2.0.3',
                         'sortedcontainers==1.5.7',
                         'psutil==5.6.6',
-                        'importlib-metadata==2.1.1',
+                        'importlib-metadata==2.1.3',
                         'portalocker==0.5.7',
                         'libnacl==1.6.1',
                         'six==1.11.0',

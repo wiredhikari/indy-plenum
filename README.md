@@ -1,14 +1,43 @@
+# Modified Indy Plenum for Network DIDs
+
+This is a modification of indy plenum that adds a plugin (without altering any core plenum logic) in order to support group controller for DIDs. This group controller is used to implement Network DIDs.
+
+## Instructions to use it:
+
+1. Create a virtual environment. `virtualenv venv`
+2. Activate virtualenv `source venv/bin/activate`
+3. Pull indy-node from [git@github.com:hyperledger/indy-node](http://github.com/hyperledger/indy-node)
+4. Build indy-plenum then use it as a dependency to build indy-node.
+```
+pip uninstall -y indy-plenum
+pip uninstall -y indy-node
+cd indy-plenum
+python setup.py install
+cd ..
+cd indy-node
+python setup.py install
+./scripts/create_dirs.sh
+```
+5. Run indy nodes: 
+```
+start_indy_node Node1 0.0.0.0 9701 0.0.0.0 9702
+start_indy_node Node2 0.0.0.0 9703 0.0.0.0 9704
+start_indy_node Node3 0.0.0.0 9705 0.0.0.0 9706
+start_indy_node Node4 0.0.0.0 9707 0.0.0.0 9708
+```
+
 ![logo](indy-logo.png)
 
-* [Plenum Byzantine Fault Tolerant Protocol](#plenum-byzantine-fault-tolerant-protocol)
-* [Technical Overview of Indy Plenum](#technical-overview-of-indy-plenum)
-* [Other Documentation](#other-documentation)
-* [Indy Plenum Repository Structure](#indy-plenum-repository-structure)
-* [Dependencies](#dependencies)
-* [Contact Us](#contact-us)
-* [How to Contribute](#how-to-contribute)
-* [How to Start Working with the Code](#how-to-start-working-with-the-code)
-* [Try Plenum Locally](#try-plenum-locally)
+- [Modified Indy Plenum for Network DIDs](#modified-indy-plenum-for-network-dids)
+  - [Instructions to use it:](#instructions-to-use-it)
+  - [Plenum Byzantine Fault Tolerant Protocol](#plenum-byzantine-fault-tolerant-protocol)
+  - [Technical Overview of Indy Plenum](#technical-overview-of-indy-plenum)
+  - [Other Documentation](#other-documentation)
+  - [Indy Plenum Repository Structure](#indy-plenum-repository-structure)
+  - [Dependencies](#dependencies)
+  - [Contact Us](#contact-us)
+  - [How to Contribute](#how-to-contribute)
+  - [How to Start Working with the Code](#how-to-start-working-with-the-code)
 
 ## Plenum Byzantine Fault Tolerant Protocol    
 
