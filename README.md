@@ -31,6 +31,7 @@ start_indy_node Node4 0.0.0.0 9707 0.0.0.0 9708
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [Modified Indy Plenum for Network DIDs](#modified-indy-plenum-for-network-dids)
   - [Instructions to use it:](#instructions-to-use-it)
   - [Plenum Byzantine Fault Tolerant Protocol](#plenum-byzantine-fault-tolerant-protocol)
@@ -59,7 +60,21 @@ start_indy_node Node4 0.0.0.0 9707 0.0.0.0 9708
 * [Try Plenum Locally](#try-plenum-locally)
 >>>>>>> fb742232 (Devcontainers)
 =======
+=======
+>>>>>>> 4b26c4a9 (Update dependency and readme)
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/hyperledger/indy-plenum/tree/main)
+=======
+- [Modified Indy Plenum for Network DIDs](#modified-indy-plenum-for-network-dids)
+  - [Instructions to use it:](#instructions-to-use-it)
+  - [Plenum Byzantine Fault Tolerant Protocol](#plenum-byzantine-fault-tolerant-protocol)
+  - [Technical Overview of Indy Plenum](#technical-overview-of-indy-plenum)
+  - [Other Documentation](#other-documentation)
+  - [Indy Plenum Repository Structure](#indy-plenum-repository-structure)
+  - [Dependencies](#dependencies)
+  - [Contact Us](#contact-us)
+  - [How to Contribute](#how-to-contribute)
+  - [How to Start Working with the Code](#how-to-start-working-with-the-code)
+>>>>>>> 2a628dae (Update dependency and readme)
 
 
 - [Announcements](#announcements)
