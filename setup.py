@@ -42,8 +42,12 @@ tests_require = ['attrs>=20.3.0', 'pytest>=6.2.2', 'pytest-xdist>=2.2.1', 'pytes
 >>>>>>> e26dcdb9 (updates setup.py with newer python package versions)
 =======
 tests_require = ['attrs==20.3.0', 'pytest==6.2.2', 'pytest-xdist==2.2.1', 'pytest-forked==1.3.0',
+<<<<<<< HEAD
                  'python3-indy==1.15.0-dev-1625', 'pytest-asyncio==0.14.0']
 >>>>>>> 6730d4c4 (publishing of the artifacts for Ubuntu 20.04)
+=======
+                 'python3-indy==1.16.0.post236', 'pytest-asyncio==0.14.0']
+>>>>>>> 43161511 (fix: fix python3-indy requirement)
 
 
 class PyZMQCommand(distutils.cmd.Command):
