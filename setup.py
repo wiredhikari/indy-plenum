@@ -35,7 +35,7 @@ class PyZMQCommand(distutils.cmd.Command):
     description = 'pyzmq install target'
 
     version = 'pyzmq==22.3.0'
-    options = '--install-option=--zmq=bundled'
+    options = ''
 
     def initialize_options(self):
         pass
@@ -44,7 +44,7 @@ class PyZMQCommand(distutils.cmd.Command):
         pass
 
     def run(self):
-        command = ['pip', 'install', self.version, self.options]
+        command = ['pip', 'install', self.version]
         subprocess.check_call(command)
 
 

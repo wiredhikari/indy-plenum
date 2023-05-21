@@ -5,7 +5,7 @@ from typing import Optional
 from common.serializers.serialization import domain_state_serializer
 from ledger.util import F
 from plenum.common.constants import NYM, ROLE, STEWARD, DOMAIN_LEDGER_ID, \
-    TXN_TIME, VERKEY, TARGET_NYM
+    TXN_TIME, VERKEY, TARGET_NYM, LedgerState
 from plenum.common.exceptions import UnauthorizedClientRequest
 from plenum.common.request import Request
 from plenum.common.txn_util import get_payload_data, get_from, \
