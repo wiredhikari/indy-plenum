@@ -18,3 +18,36 @@ from plenum.common.txn_util import get_payload_data, get_from, \
 
 import libnacl
 import libnacl.encode
+
+"""
+DID identifier (globally unique)::> Stencil: did:<method-name>:<method-specific-id>
+                                        Ex.: did:exampleiin:org1
+
+{
+  "id": "did:exampleiin:org1",
+  "verificationMethod": [{
+    "id": "did:exampleiin:org1#key1",
+    "type": "Ed25519VerificationKey2020",
+    "controller": "did:exampleiin:org1",
+    "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+  }],
+
+  "authentication": ["did:exampleiin:org1#key1"]
+}
+
+
+{
+  "DIDDocument": {
+    "id": "did:exampleiin:org1",
+    "verificationMethod": [{
+      "id": "did:exampleiin:org1#key1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:exampleiin:org1",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }],
+
+    "authentication": ["did:exampleiin:org1#key1"]
+  },
+  "signature": "..."
+}
+"""
