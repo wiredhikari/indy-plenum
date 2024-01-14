@@ -12,7 +12,7 @@ from plenum.server.database_manager import DatabaseManager
 from plenum.server.plugin.did_plugin.constants import CREATE_DID
 from plenum.server.plugin.did_plugin.request_handlers.abstract_did_req_handler import AbstractDIDReqHandler
 from plenum.server.plugin.did_plugin.common import DID, libnacl_validate
-
+from plenum.server.plugin.did_plugin.constants import OUDID
 from plenum.common.txn_util import get_payload_data, get_from, \
     get_seq_no, get_txn_time, get_request_data
 

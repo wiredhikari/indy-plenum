@@ -35,7 +35,7 @@ class PyZMQCommand(distutils.cmd.Command):
     description = 'pyzmq install target'
 
     version = 'pyzmq==22.3.0'
-    options = ''
+    options = '-I'
 
     def initialize_options(self):
         pass
@@ -44,7 +44,7 @@ class PyZMQCommand(distutils.cmd.Command):
         pass
 
     def run(self):
-        command = ['pip', 'install', self.version]
+        command = ['pip', 'install', self.version, self.options]
         subprocess.check_call(command)
 
 
@@ -86,7 +86,7 @@ setup(
     ],
 
     keywords='Byzantine Fault Tolerant Plenum',
-    packages=find_packages(exclude=['test', 'test.*', 'docs', 'docs*', 'simulation']) + [
+    packages=find_packages(exclude=['test',"*.pyc", "data.__pycache__",'test.*', 'docs', 'docs*', 'simulation']) + [
         'data', ],
     # TODO move that to MANIFEST.in
     package_data={

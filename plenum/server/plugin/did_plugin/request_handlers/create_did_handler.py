@@ -20,50 +20,46 @@ import libnacl
 import libnacl.encode
 
 """
-CreateDID request structure:
-
 {
-    # Mandatory
-    "DIDDocument": {
-    "@context": [
-        "https://www.w3.org/ns/did/v1",
-        "https://w3id.org/security/suites/ed25519-2020/v1"
-    ],
-
-    # Mandatory
-    "id": "did:iin:iin123:shippingcompany",
-
-    "verificationMethod": [{
-        "id": "did:iin:iin123:shippingcompany#key-1",
-        "type": "Ed25519VerificationKey2020", 
-        "controller": "did:example:123456789abcdefghi",
-        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-        }
-    ],
-
-    # Mandatory
-    "authentication": [
-        
-        "did:iin:iin123:shippingcompany#keys-1",
-        
-        {
-        "id": "did:iin:iin123:shippingcompany#keys-2",
-        "type": "Ed25519VerificationKey2020",
-        "controller": "did:shippingcompany",
-        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-        }
-    ],
-    
+    "identifier": "EbP4aYNeTHL6q385GuVpRV",
+    "operation": {
+        "dest": "Vzfdscz6YG6n1EuNJV4ob1",
+        "type": "20220",
+        "data": {
+            "DIDDocument": {
+                "@context": [
+                    "https://www.w3.org/ns/did/v1",
+                    "https://w3id.org/security/suites/ed25519-2020/v1"
+                ],
+                "id": "did:iin:iin123:shippingcompany",
+                "verificationMethod": [
+                    {
+                        "id": "did:iin:iin123:shippingcompany#key-1",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": "did:example:123456789abcdefghi",
+                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                ],
+                "authentication": [
+                    "did:iin:iin123:shippingcompany#keys-1",
+                    {
+                        "id": "did:iin:iin123:shippingcompany#keys-2",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": "did:shippingcompany",
+                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                ]
+            },
+            "signature": {
+                "verificationMethod": "did:iin:iin123:shippingcompany#keys-1",
+                "sigbase64": "sdfsdfsdf"
+            }
+        },
+        "verkey": "~HFPBKb7S7ocrTzxakNbcao"
     },
-
-    # Mandatory
-    "signature":{
-        "verificationMethod": "did:iin:iin123:shippingcompany#keys-1",
-        "sigbase64": "sdfsdfsdf"
-    }
-
+    "protocolVersion": 2,
+    "reqId": 1704278802665233400
 }
-
 
 """
 
