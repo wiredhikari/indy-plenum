@@ -93,3 +93,36 @@ class NetworkDID:
         for method_id, method in self.authentication_methods.items():
             if method["type"] == "GroupMultiSig":
                 return method
+
+
+
+class OUDID:
+    did = None
+    id = None
+    verification_methods = None
+    authentication_methods = None
+
+    def __init__(self, did_json) -> None:
+        self.did = json.loads(did_json)
+        self.id = self.did["id"]
+
+        # populate verification methods:
+        self.verification_methods = {}
+        for method in self.did["verificationMethod"]:
+            self.verification_methods[method["id"]] = method
+
+        # "authentication": ["did:<method-name>:<method-specific-id>"]
+        # populate authentication methods:
+        self.authentication_methods = {}
+        for method in self.did["authentication"]:
+            if isinstance(method, dict):
+                # fully specified method
+                self.authentication_methods[method["id"]] = method
+            elif isinstance(method, str):
+                # id points to a verification method
+                # TODO: if it points to a different did -> resolve that did and fetch method
+                if method in self.verification_methods:
+                    self.authentication_methods[method] = self.verification_methods[method]
+
+    def fetch_authentication_method(self) -> dict:
+        pass
