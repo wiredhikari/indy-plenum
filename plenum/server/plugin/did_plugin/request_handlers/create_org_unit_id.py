@@ -9,7 +9,7 @@ from common.serializers.serialization import domain_state_serializer
 from plenum.common.exceptions import InvalidClientRequest, MissingSignature, InvalidSignature
 
 from plenum.server.database_manager import DatabaseManager
-from plenum.server.plugin.did_plugin.constants import CREATE_DID
+from plenum.server.plugin.did_plugin.constants import OUDID
 from plenum.server.plugin.did_plugin.request_handlers.abstract_did_req_handler import AbstractDIDReqHandler
 from plenum.server.plugin.did_plugin.common import DID, libnacl_validate
 from plenum.server.plugin.did_plugin.constants import OUDID
@@ -92,7 +92,7 @@ class CreateOUDIDRequest:
 class CreateOUDIDHandler(AbstractDIDReqHandler):
 
     def __init__(self, database_manager: DatabaseManager, did_dict: dict):
-        super().__init__(database_manager, CREATE_DID, did_dict)
+        super().__init__(database_manager, OUDID, did_dict)
 
     def additional_dynamic_validation(self, request: Request, req_pp_time: Optional[int]):
 
@@ -103,7 +103,7 @@ class CreateOUDIDHandler(AbstractDIDReqHandler):
         try:
             create_did_request = CreateDIDRequest(create_did_request_dict)
         except:
-            raise InvalidClientRequest(request.identifier, request.reqId, "Malformed CREATE_DID request.")
+            raise InvalidClientRequest(request.identifier, request.reqId, "Malformed OUDID request.")
 
         # TODO Check if the did uri corresponds to this iin or not.
 

@@ -125,4 +125,6 @@ class OUDID:
                     self.authentication_methods[method] = self.verification_methods[method]
 
     def fetch_authentication_method(self) -> dict:
-        pass
+        if authentication_method_id in self.authentication_methods:
+            return self.authentication_methods[authentication_method_id]
+        return None
