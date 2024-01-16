@@ -9,6 +9,7 @@ from plenum.server.plugin.did_plugin.storage import get_did_plugin_hash_store, \
     get_did_plugin_ledger, get_did_plugin_state
 
 
+# @Q... what is node.. where is the definition...
 def integrate_plugin_in_node(node):
     node.config = get_config(node.config)
     hash_store = get_did_plugin_hash_store(node.dataLocation)
