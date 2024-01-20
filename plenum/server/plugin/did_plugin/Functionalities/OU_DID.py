@@ -3,6 +3,14 @@ import base64
 from nacl.signing import VerifyKey
 from nacl.exceptions import BadSignatureError
 
+"""
+1. The function wil recieve REQUEST_BODY somehow
+2. The REQUEST_BODY will have `DIDDocment`which will have all the info....
+3. I will get `publicKeyMultibase` for verification purposes.
+4. Now get the `VerificationKey` and `Signature` from REQUEST_BODY.
+5. Then tried to verify it....
+"""
+
 request = {
     "identifier": "EbP4aYNeTHL6q385GuVpRV",
     "operation": {
