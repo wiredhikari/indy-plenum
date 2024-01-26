@@ -3,7 +3,7 @@ from plenum.common.transactions import Transactions
 
 # DO NOT CHANGE ONCE CODE IS DEPLOYED ON THE LEDGER
 # TODO: Might need a short hash with unique entropy, plugin name being input of hash.
-PREFIX = '222'
+PREFIX = '3333'
 
 
 class DemoTransactions(Transactions):

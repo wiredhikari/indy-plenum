@@ -4,7 +4,10 @@ from plenum.server.plugin.did_plugin import DID_PLUGIN_LEDGER_ID
 from plenum.server.plugin.did_plugin.batch_handlers.did_plugin_batch_handler import DIDBatchHandler
 from plenum.server.plugin.did_plugin.config import get_config
 from plenum.server.plugin.did_plugin.request_handlers.create_did_handler import CreateDIDHandler
+from plenum.server.plugin.did_plugin.request_handlers.create_org_unit_id import CreateOUDIDHandler
+
 from plenum.server.plugin.did_plugin.request_handlers.fetch_did import FetchDIDHandler
+
 from plenum.server.plugin.did_plugin.storage import get_did_plugin_hash_store, \
     get_did_plugin_ledger, get_did_plugin_state
 
@@ -29,6 +32,8 @@ def integrate_plugin_in_node(node):
 
     did_dict = {}
     node.write_manager.register_req_handler(CreateDIDHandler(node.db_manager, did_dict))
+    node.write_manager.register_req_handler(CreateOUDIDHandler(node.db_manager, did_dict))
+
     # node.write_manager.register_req_handler(AuctionEndHandler(node.db_manager, did_dict))
     # node.write_manager.register_req_handler(PlaceBidHandler(node.db_manager, did_dict))
     # node.read_manager.register_req_handler(GetBalHandler(node.db_manager))

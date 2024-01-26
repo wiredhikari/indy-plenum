@@ -9,7 +9,7 @@ from common.serializers.serialization import domain_state_serializer
 from plenum.common.exceptions import InvalidClientRequest, MissingSignature, InvalidSignature
 
 from plenum.server.database_manager import DatabaseManager
-from plenum.server.plugin.did_plugin.constants import CREATE_DID, CREATE_NETWORK_DID
+from plenum.server.plugin.did_plugin.constants import  CREATE_NETWORK_DID
 from plenum.server.plugin.did_plugin.request_handlers.abstract_did_req_handler import AbstractDIDReqHandler
 from plenum.server.plugin.did_plugin.common import DID, NetworkDID, did_id_from_url, libnacl_validate
 
