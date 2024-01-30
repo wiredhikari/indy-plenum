@@ -18,3 +18,4 @@ class DemoTransactions(Transactions):
     UPDATE_NETWORK_DID = PREFIX + '4'
     DEACTIVATE_DID = PREFIX + '5'
     OUDID = PREFIX + '6'
+    SDDID = PREFIX + '7'

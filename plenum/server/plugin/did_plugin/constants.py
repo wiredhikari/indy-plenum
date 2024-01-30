@@ -9,6 +9,7 @@ UPDATE_DID = DemoTransactions.UPDATE_DID.value
 UPDATE_NETWORK_DID = DemoTransactions.UPDATE_NETWORK_DID.value
 DEACTIVATE_DID = DemoTransactions.DEACTIVATE_DID.value
 OUDID = DemoTransactions.OUDID.value
+SDDID = DemoTransactions.SDDID.value
 
 AMOUNT = "amount"
 ID = "id"

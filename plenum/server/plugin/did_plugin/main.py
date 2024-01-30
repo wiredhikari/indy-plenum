@@ -5,6 +5,7 @@ from plenum.server.plugin.did_plugin.batch_handlers.did_plugin_batch_handler imp
 from plenum.server.plugin.did_plugin.config import get_config
 from plenum.server.plugin.did_plugin.request_handlers.create_did_handler import CreateDIDHandler
 from plenum.server.plugin.did_plugin.request_handlers.create_org_unit_id import CreateOUDIDHandler
+from plenum.server.plugin.did_plugin.request_handlers.create_security_domain_did import CreateSDDIDHandler
 
 from plenum.server.plugin.did_plugin.request_handlers.fetch_did import FetchDIDHandler
 
