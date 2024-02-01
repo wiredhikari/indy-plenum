@@ -34,6 +34,7 @@ def integrate_plugin_in_node(node):
     did_dict = {}
     node.write_manager.register_req_handler(CreateDIDHandler(node.db_manager, did_dict))
     node.write_manager.register_req_handler(CreateOUDIDHandler(node.db_manager, did_dict))
+    node.write_manager.register_req_handler(CreateSDDIDHandler(node.db_manager, did_dict))
 
     # node.write_manager.register_req_handler(AuctionEndHandler(node.db_manager, did_dict))
     # node.write_manager.register_req_handler(PlaceBidHandler(node.db_manager, did_dict))
