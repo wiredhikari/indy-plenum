@@ -41,11 +41,11 @@ class DID:
                 # TODO: if it points to a different did -> resolve that did and fetch method
                 if method in self.verification_methods:
                     self.authentication_methods[method] = self.verification_methods[method]
-
+# [{'controller': 'did:exampleiin:org1', 'id': 'did:exampleiin:org1#key1', 'publicKeyMultibase': '4PS3EDQ3dW1tci1Bp6543CfuuebjFrg36kLAUcskGfaA', 'type': 'libnacl'}]}
     def fetch_authentication_method(self, authentication_method_id: str) -> dict:
-        if authentication_method_id in self.authentication_methods:
-            return self.authentication_methods[authentication_method_id]
-        return None
+        # if authentication_method_id in self.authentication_methods:
+        #     return self.authentication_methods[authentication_method_id]
+        return authentication_method_id[0]
 
 
 

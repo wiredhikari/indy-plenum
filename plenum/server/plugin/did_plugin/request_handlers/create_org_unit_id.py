@@ -16,6 +16,8 @@ from plenum.common.txn_util import get_payload_data, get_from, \
 import libnacl
 
 import libnacl.encode
+print("hello1")
+
 """
 DID identifier (globally unique)::> Stencil: did:<method-name>:<method-specific-id>
                                         Ex.: did:exampleiin:org1
@@ -66,23 +68,31 @@ class CreateOUDIDRequest:
         self.did_str = json.dumps(request_dict["DIDDocument"])
         self.did = DID(self.did_str)
         self.signature = request_dict["signature"]
-    
+        print("hello2")
+
     def authenticate(self):
         # Get authentication method
-        auth_method = self.did.fetch_authentication_method(self.signature["verificationMethod"])
+        print("hello3.0")
         print(self.signature)
-        print("hello1")
+        auth_method = self.did.fetch_authentication_method(self.signature["verificationMethod"])
+        print(f"=========={self.signature}==========")
+        print("hello3")
         print(auth_method)
-        print("hello2")
+        print("hello4")
+        print(auth_method["type"])
         if not auth_method:
             raise MissingSignature("Authentication verification method not found in DIDDocument.")
-        print("hello3")       
+        print("hello5")       
         if auth_method["type"] == "libnacl":
+            print("hello6")
             # validate signature
             # TODO: Json serialization is not faithful. Use ordered collections isntead.
+            print("publicKeyMultibase::>", {auth_method["publicKeyMultibase"]})
+            print("sigbase64         ::>", self.signature["sigbase64"])
             originalhash = libnacl.crypto_hash_sha256(self.did_str)
-            libnacl_validate(auth_method["publicKeyBase64"], self.signature["sigbase64"], originalhash)
-
+            print("originalhash      ::>", originalhash)
+            libnacl_validate(auth_method["publicKeyMultibase"], self.signature["sigbase64"], originalhash)
+            print("hello7-thala for reason")
             # TODO: Add more authentication methods / some standard
         else:
             raise InvalidSignature("Unknown signature type: ", auth_method["type"])
