@@ -1,13 +1,11 @@
 import libnacl.sign
-
+import nacl
 from typing import Optional
 import json
-
 from plenum.common.constants import DATA
 from plenum.common.request import Request
 from common.serializers.serialization import domain_state_serializer
 from plenum.common.exceptions import InvalidClientRequest, MissingSignature, InvalidSignature
-
 from plenum.server.database_manager import DatabaseManager
 from plenum.server.plugin.did_plugin.constants import OUDID
 from plenum.server.plugin.did_plugin.request_handlers.abstract_did_req_handler import AbstractDIDReqHandler
@@ -16,9 +14,8 @@ from plenum.common.txn_util import get_payload_data, get_from, \
     get_seq_no, get_txn_time, get_request_data
 
 import libnacl
-import libnacl.encode
-from plenum.server.plugin.did_plugin.request_handlers.create_did_handler import CreateDIDRequest
 
+import libnacl.encode
 """
 DID identifier (globally unique)::> Stencil: did:<method-name>:<method-specific-id>
                                         Ex.: did:exampleiin:org1
@@ -73,10 +70,13 @@ class CreateOUDIDRequest:
     def authenticate(self):
         # Get authentication method
         auth_method = self.did.fetch_authentication_method(self.signature["verificationMethod"])
-
+        print(self.signature)
+        print("hello1")
+        print(auth_method)
+        print("hello2")
         if not auth_method:
             raise MissingSignature("Authentication verification method not found in DIDDocument.")
-        
+        print("hello3")       
         if auth_method["type"] == "libnacl":
             # validate signature
             # TODO: Json serialization is not faithful. Use ordered collections isntead.
@@ -86,6 +86,7 @@ class CreateOUDIDRequest:
             # TODO: Add more authentication methods / some standard
         else:
             raise InvalidSignature("Unknown signature type: ", auth_method["type"])
+
 
 
 class CreateOUDIDHandler(AbstractDIDReqHandler):
@@ -100,7 +101,7 @@ class CreateOUDIDHandler(AbstractDIDReqHandler):
         
         # parse create did request
         try:
-            create_did_request = CreateDIDRequest(create_did_request_dict)
+            create_did_request = CreateOUDIDRequest(create_did_request_dict)
         except:
             raise InvalidClientRequest(request.identifier, request.reqId, "Malformed OUDID request.")
 
@@ -115,10 +116,9 @@ class CreateOUDIDHandler(AbstractDIDReqHandler):
         create_did_request.authenticate()
 
 
-
     def update_state(self, txn, prev_result, request, is_committed=False):
         data = get_payload_data(txn).get(DATA)
-        create_did_request = CreateDIDRequest(data)
+        create_did_request = CreateOUDIDRequest(data)
 
         self.did_dict[create_did_request.did.id] = create_did_request.did_str
         key = create_did_request.did.id

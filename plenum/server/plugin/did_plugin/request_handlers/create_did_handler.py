@@ -63,8 +63,6 @@ import libnacl.encode
 
 """
 
-
-
 class CreateDIDRequest:
     did: DID = None
     did_str = None

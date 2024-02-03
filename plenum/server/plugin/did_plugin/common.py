@@ -130,7 +130,7 @@ class OUDID:
         return None
     
 
-    class SDDID:
+class SDDID:
     did = None
     id = None
     verification_methods = None

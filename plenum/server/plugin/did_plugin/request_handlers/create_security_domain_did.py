@@ -88,8 +88,8 @@ import libnacl.encode
 }
 """
 
-class CreateNetworkDIDRequest:
-    did: NetworkDID = None
+class CreateSDDIDRequest:
+    did: SDDID = None
     did_str = None
     signatures = None
     this_indy_state = None
