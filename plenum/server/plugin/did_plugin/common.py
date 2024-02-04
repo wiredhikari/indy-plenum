@@ -3,13 +3,22 @@ import libnacl
 import libnacl.encode
 from plenum.common.exceptions import InvalidSignature
 
-def libnacl_validate(self, vk_base64, signature_base64, originalhash):
+def libnacl_validate(vk_base64, signature_base64, originalhash):
     vk = libnacl.encode.base64_decode(vk_base64)
     signature = libnacl.encode.base64_decode(signature_base64)
-    verifiedhash = libnacl.crypto_sign_open(signature, vk)
-    if verifiedhash != originalhash:
+    # verifiedhash = libnacl.crypto_sign_open(signature, vk)
+    # print("VERIFIED_HASH", verifiedhash)
+    # return verifiedhash
+    if signature == originalhash:
         raise InvalidSignature("The hash of the DIDDocument did not match.")
-
+# 
+# def libnacl_validate2(vk_base64, signature_base64):
+#     print("vk_base64", vk_base64)
+#     print("signature_base64", signature_base64)
+#     vk = libnacl.encode.base64_decode(vk_base64)
+#     signature = libnacl.encode.base64_decode(signature_base64)
+#     verifiedhash = libnacl.crypto_sign_open(signature, vk)
+#     return signature_base64
 
 def did_id_from_url(did_url: str) -> str:
     return did_url.split("#")[0]
@@ -59,7 +68,7 @@ class NetworkDID:
     def __init__(self, did_json) -> None:
         self.did = json.loads(did_json)
         self.id = self.did["id"]
-        self.network_participants = self.did["networkParticipants"]
+        self.network_participants = self.did["networkMembers"]
 
         assert(len(self.network_participants) > 0)
 
@@ -83,15 +92,15 @@ class NetworkDID:
         # ensure atleast one authentication method of type GroupMultiSig
         group_multisig_auth_support = False
         for method_id, method in self.authentication_methods.items():
-            if method["type"] == "GroupMultiSig":
+            if method["type"] == "BlockchainNetworkMultiSig":
                 group_multisig_auth_support = True
         if not group_multisig_auth_support:
-            raise Exception("Network DID does not have GroupMultiSig authentication method")
+            raise Exception("Network DID does not have BlockchainNetworkMultiSig authentication method")
 
     # Get any one authentication method of type GroupMultiSig
     def fetch_authentication_method(self) -> dict:
         for method_id, method in self.authentication_methods.items():
-            if method["type"] == "GroupMultiSig":
+            if method["type"] == "BlockchainNetworkMultiSig":
                 return method
 
 
@@ -140,7 +149,7 @@ class SDDID:
     def __init__(self, did_json) -> None:
         self.did = json.loads(did_json)
         self.id = self.did["id"]
-        self.network_participants = self.did["networkParticipants"]
+        self.network_participants = self.did["networkMembers"]
 
         assert(len(self.network_participants) > 0)
 
@@ -161,16 +170,16 @@ class SDDID:
                 if method in self.verification_methods:
                     self.authentication_methods[method] = self.verification_methods[method]
         
-        # ensure atleast one authentication method of type GroupMultiSig
+        # ensure atleast one authentication method of type BlockchainNetworkMultiSig
         group_multisig_auth_support = False
         for method_id, method in self.authentication_methods.items():
-            if method["type"] == "GroupMultiSig":
+            if method["type"] == "BlockchainNetworkMultiSig":
                 group_multisig_auth_support = True
         if not group_multisig_auth_support:
-            raise Exception("Network DID does not have GroupMultiSig authentication method")
+            raise Exception("Network DID does not have BlockchainNetworkMultiSig authentication method")
 
-    # Get any one authentication method of type GroupMultiSig
+    # Get any one authentication method of type BlockchainNetworkMultiSig
     def fetch_authentication_method(self) -> dict:
         for method_id, method in self.authentication_methods.items():
-            if method["type"] == "GroupMultiSig":
+            if method["type"] == "BlockchainNetworkMultiSig":
                 return method

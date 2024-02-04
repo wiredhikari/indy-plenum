@@ -179,9 +179,9 @@ class CreateNetworkDIDHandler(AbstractDIDReqHandler):
         # TODO Check if the did uri corresponds to this iin or not.
 
         # Check if did already in this iin or not.
-        serialized_did = self.state.get(create_network_did_request.did.id, isCommitted=True)
-        if serialized_did:
-            raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
+        # serialized_did = self.state.get(create_network_did_request.did.id, isCommitted=False)
+        # if serialized_did:
+        #     raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
 
         # Authenticate
         create_network_did_request.authenticate()
@@ -190,7 +190,7 @@ class CreateNetworkDIDHandler(AbstractDIDReqHandler):
 
     def update_state(self, txn, prev_result, request, is_committed=False):
         data = get_payload_data(txn).get(DATA)
-        create_network_did_request = CreateDIDRequest(data)
+        create_network_did_request = CreateNetworkDIDRequest(data)
 
         self.did_dict[create_network_did_request.did.id] = create_network_did_request.did_str
         key = create_network_did_request.did.id

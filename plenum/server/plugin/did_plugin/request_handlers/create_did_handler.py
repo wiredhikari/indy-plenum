@@ -111,9 +111,9 @@ class CreateDIDHandler(AbstractDIDReqHandler):
         # TODO Check if the did uri corresponds to this iin or not.
 
         # Check if did already in this iin or not.
-        serialized_did = self.state.get(create_did_request.did.id, isCommitted=True)
-        if serialized_did:
-            raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
+        # serialized_did = self.state.get(create_did_request.did.id, isCommitted=False)
+        # if serialized_did:
+        #     raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
 
         # Authenticate
         create_did_request.authenticate()

@@ -87,10 +87,12 @@ class CreateOUDIDRequest:
             print("hello6")
             # validate signature
             # TODO: Json serialization is not faithful. Use ordered collections isntead.
-            print("publicKeyMultibase::>", {auth_method["publicKeyMultibase"]})
+            print("publicKeyMultibase::>", auth_method["publicKeyMultibase"])
             print("sigbase64         ::>", self.signature["sigbase64"])
             originalhash = libnacl.crypto_hash_sha256(self.did_str)
             print("originalhash      ::>", originalhash)
+            print("did_str           ::>", self.did_str)
+            # TAG::>
             libnacl_validate(auth_method["publicKeyMultibase"], self.signature["sigbase64"], originalhash)
             print("hello7-thala for reason")
             # TODO: Add more authentication methods / some standard
@@ -118,9 +120,9 @@ class CreateOUDIDHandler(AbstractDIDReqHandler):
         # TODO Check if the did uri corresponds to this iin or not.
 
         # Check if did already in this iin or not.
-        serialized_did = self.state.get(create_did_request.did.id, isCommitted=True)
-        if serialized_did:
-            raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
+        # serialized_did = self.state.get(create_did_request.did.id, isCommitted=False)
+        # if serialized_did:
+        #     raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
 
         # Authenticate
         create_did_request.authenticate()

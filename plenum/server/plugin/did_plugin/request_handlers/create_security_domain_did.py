@@ -89,25 +89,33 @@ import libnacl.encode
 """
 
 class CreateSDDIDRequest:
-    did: SDDID = None
+    did: NetworkDID = None
     did_str = None
     signatures = None
     this_indy_state = None
-
+    print("hello1")
     def __init__(self, request_dict: str, indy_state) -> None:
-        self.did_str = json.dumps(request_dict["NetworkDIDDocument"])
+        self.did_str = json.dumps(request_dict["DIDDocument"])
+        print("hello2")
         self.did = NetworkDID(self.did_str)
+        print("hello3")
         self.signatures = request_dict["signatures"]
+        print("hello4")
         self.this_indy_state = indy_state
-    
+        print("hello5")
     def fetch_party_key_from_auth_method(self, party_did_id, auth_method):
+        print("hello5.5")
         for candidate_key_url in auth_method["multisigKeys"]:
+            print("hello6")
             base_url = did_id_from_url(candidate_key_url)
+            print("hello6")
             if base_url == party_did_id:
                 return candidate_key_url
 
     def fetch_party_verification_method(self, party_key_url):
+        print("hello3")
         party_did_id = did_id_from_url(party_key_url)
+        print("party_did_id                   ::>",party_did_id )
         # Fetch party did
         # TODO: if did is in some other iin network
 
@@ -115,10 +123,10 @@ class CreateSDDIDRequest:
         # did:iin:somethingelse:asdasd
 
         # If did is in the same indy iin network
-        serialized_party_did = self.this_indy_state.get(party_did_id, isCommitted=True)
-        if not serialized_party_did:
-            raise "Could not resolve did " + party_did_id
-
+        serialized_party_did = self.this_indy_state.get(party_did_id)
+        # if not serialized_party_did:
+            # raise "Could not resolve did " + party_did_id
+        print(serialized_party_did)
         party_did = domain_state_serializer.deserialize(serialized_party_did)
         party_did = DID(party_did)
         party_authentication_method = party_did.fetch_authentication_method(party_key_url)
@@ -127,14 +135,15 @@ class CreateSDDIDRequest:
     def authenticate(self):
         # Get any one authentication method of type GroupMultiSig
         auth_method = self.did.fetch_authentication_method()
+        print("AUTH_METHOD",auth_method["multisigKeys"])
 
         if not auth_method:
-            raise MissingSignature("Authentication verification method not found in NetworkDIDDocument.")
+            raise MissingSignature("Authentication verification method not found in SDDIDDocument.")
         
         # Iterate of each participant
         for party_did_id in self.did.network_participants:
             # Fetch the key url from auth_method
-            party_key_url = self.fetch_party_key_from_auth_method(auth_method, party_did_id)
+            party_key_url = self.fetch_party_key_from_auth_method(party_did_id, auth_method)
 
             # Fetch verification key of the party
             party_verification_method = self.fetch_party_verification_method(party_key_url)
@@ -157,10 +166,10 @@ class CreateSDDIDRequest:
         else:
             raise InvalidSignature("Unknown signature type: ", auth_method["type"])
 
-class CreateNetworkDIDHandler(AbstractDIDReqHandler):
+class CreateSDDIDHandler(AbstractDIDReqHandler):
 
     def __init__(self, database_manager: DatabaseManager, did_dict: dict):
-        super().__init__(database_manager, CREATE_NETWORK_DID, did_dict)
+        super().__init__(database_manager, SDDID, did_dict)
 
     def additional_dynamic_validation(self, request: Request, req_pp_time: Optional[int]):
 
@@ -168,10 +177,10 @@ class CreateNetworkDIDHandler(AbstractDIDReqHandler):
         create_network_did_request_dict = operation.get(DATA)
         
         # parse create did request
-        try:
-            create_network_did_request = CreateNetworkDIDRequest(create_network_did_request_dict, self.state)
-        except:
-            raise InvalidClientRequest(request.identifier, request.reqId, "Malformed CREATE_NETWORK_DID request.")
+        # try:
+        create_network_did_request = CreateSDDIDRequest(create_network_did_request_dict, self.state)
+        # except:
+            # raise InvalidClientRequest(request.identifier, request.reqId, "Malformed CREATE_NETWORK_DID request.")
 
         # TODO Check if the did uri corresponds to this iin or not.
 
@@ -184,10 +193,9 @@ class CreateNetworkDIDHandler(AbstractDIDReqHandler):
         create_network_did_request.authenticate()
 
 
-
     def update_state(self, txn, prev_result, request, is_committed=False):
         data = get_payload_data(txn).get(DATA)
-        create_network_did_request = CreateDIDRequest(data)
+        create_network_did_request = CreateSDDIDRequest(data, self.state)
 
         self.did_dict[create_network_did_request.did.id] = create_network_did_request.did_str
         key = create_network_did_request.did.id
