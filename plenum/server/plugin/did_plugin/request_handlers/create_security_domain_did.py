@@ -1,3 +1,4 @@
+
 import libnacl.sign
 
 from typing import Optional
@@ -114,6 +115,8 @@ class CreateSDDIDRequest:
 
     def fetch_party_verification_method(self, party_key_url):
         print("hello3")
+        print("party_key_url                   ::>",party_key_url )
+
         party_did_id = did_id_from_url(party_key_url)
         print("party_did_id                   ::>",party_did_id )
         # Fetch party did
@@ -123,12 +126,13 @@ class CreateSDDIDRequest:
         # did:iin:somethingelse:asdasd
 
         # If did is in the same indy iin network
-        serialized_party_did = self.this_indy_state.get(party_did_id)
+        # serialized_party_did = self.this_indy_state.get(party_did_id)
         # if not serialized_party_did:
             # raise "Could not resolve did " + party_did_id
-        print(serialized_party_did)
-        party_did = domain_state_serializer.deserialize(serialized_party_did)
-        party_did = DID(party_did)
+        # print(serialized_party_did)
+        party_did_ser = json.dumps(party_did_id)
+        print("party_did_ser                    ::>",party_did_ser)
+        party_did = SDDID(party_did_ser)
         party_authentication_method = party_did.fetch_authentication_method(party_key_url)
         return party_authentication_method
 

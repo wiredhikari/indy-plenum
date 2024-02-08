@@ -19,3 +19,4 @@ class DemoTransactions(Transactions):
     DEACTIVATE_DID = PREFIX + '5'
     OUDID = PREFIX + '6'
     SDDID = PREFIX + '7'
+    #update network did - updating the network with new member
