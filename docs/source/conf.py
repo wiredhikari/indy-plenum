@@ -163,8 +163,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'IndyPlenum', 'Indy Plenum Documentation',
-     author, 'IndyPlenum', 'Plenum is the heart of the distributed ledger technology inside Hyperledger
-Indy.',
+     author, 'IndyPlenum', 'Plenum is the heart of the distributed ledger technology inside Hyperledger Indy.',
      'Miscellaneous'),
 ]
 
@@ -237,6 +236,6 @@ if(on_rtd):
     
     except:
         e = sys.exc_info()[0]
-        print e
+        print(e)
     finally:      
         os.system("rm -rf remote_conf/ __pycache__/ remote_conf.py")
