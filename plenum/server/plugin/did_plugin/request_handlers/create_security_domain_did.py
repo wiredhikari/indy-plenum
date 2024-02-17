@@ -12,7 +12,7 @@ from plenum.common.exceptions import InvalidClientRequest, MissingSignature, Inv
 from plenum.server.database_manager import DatabaseManager
 from plenum.server.plugin.did_plugin.constants import  SDDID
 from plenum.server.plugin.did_plugin.request_handlers.abstract_did_req_handler import AbstractDIDReqHandler
-from plenum.server.plugin.did_plugin.common import DID, NetworkDID, did_id_from_url, libnacl_validate
+from plenum.server.plugin.did_plugin.common import DID, NetworkDID, did_id_from_url, libnacl_validate, libnacl_validate2
 
 
 from plenum.common.txn_util import get_payload_data, get_from, \
@@ -89,69 +89,107 @@ import libnacl.encode
 }
 """
 
+
+    
+"""
+<<<<NORMAL DID>>>>
+"DIDDocument": {
+                "@context": [
+                    "https://www.w3.org/ns/did/v1",
+                    "https://w3id.org/security/suites/ed25519-2020/v1"
+                ],
+                "id": "did:iin:iin123:shippingcompany",
+                "verificationMethod": [
+                    {
+                        "id": "did:iin:iin123:shippingcompany#key-1",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": "did:example:123456789abcdefghi",
+                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                ],
+                "authentication": [
+                    "did:iin:iin123:shippingcompany#keys-1",
+                    {
+                        "id": "did:iin:iin123:shippingcompany#keys-2",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": "did:shippingcompany",
+                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                ]
+            },
+"""
+
+
+
 class CreateSDDIDRequest:
     did: NetworkDID = None
     did_str = None
     signatures = None
     this_indy_state = None
-    print("hello1")
     def __init__(self, request_dict: str, indy_state) -> None:
         self.did_str = json.dumps(request_dict["DIDDocument"])
-        print("hello2")
         self.did = NetworkDID(self.did_str)
-        print("hello3")
         self.signatures = request_dict["signatures"]
-        print("hello4")
         self.this_indy_state = indy_state
-        print("hello5")
+
     def fetch_party_key_from_auth_method(self, party_did_id, auth_method):
-        print("hello5.5")
         for candidate_key_url in auth_method["multisigKeys"]:
-            print("hello6")
             base_url = did_id_from_url(candidate_key_url)
-            print("hello6")
             if base_url == party_did_id:
                 return candidate_key_url
 
     def fetch_party_verification_method(self, party_key_url):
-        print("hello3")
-        print("party_key_url                   ::>",party_key_url )
-
         party_did_id = did_id_from_url(party_key_url)
-        print("party_did_id                   ::>",party_did_id )
         # Fetch party did
         # TODO: if did is in some other iin network
-
-        # 1 did:iin:someotheriin1:sdfsdfsd
-        # did:iin:somethingelse:asdasd
+            # Will handle later...
 
         # If did is in the same indy iin network
-        # serialized_party_did = self.this_indy_state.get(party_did_id)
-        # if not serialized_party_did:
-            # raise "Could not resolve did " + party_did_id
-        # print(serialized_party_did)
-        party_did_ser = json.dumps(party_did_id)
-        print("party_did_ser                    ::>",party_did_ser)
-        party_did = SDDID(party_did_ser)
-        party_authentication_method = party_did.fetch_authentication_method(party_key_url)
+        
+        ### TODO: did:iin:iin123:shippingcompany -----> DIDDocument: {....}
+
+        json_data = {
+                        "@context": [
+                            "https://www.w3.org/ns/did/v1",
+                            "https://w3id.org/security/suites/ed25519-2020/v1"
+                        ],
+                        "id": party_did_id,
+                        "verificationMethod": [
+                            {
+                                "id": f"{party_did_id}#key1",
+                                "type": "libnacl",
+                                "controller": "did:example:123456789abcdefghi",
+                                "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z"
+                            }
+                        ],
+                        "authentication": [
+                            f"{party_did_id}#key1",
+                            {
+                                "id": f"{party_did_id}#key1",
+                                "type": "libnacl",
+                                "controller": "did:shippingcompany",
+                                "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z"
+                            }
+                        ]
+                    }
+        json_string = json.dumps(json_data, indent=4)
+        party_did = DID(json_string)
+        party_authentication_method = party_did.fetch_authentication(party_key_url)
         return party_authentication_method
+
 
     def authenticate(self):
         # Get any one authentication method of type GroupMultiSig
         auth_method = self.did.fetch_authentication_method()
-        print("AUTH_METHOD",auth_method["multisigKeys"])
 
         if not auth_method:
             raise MissingSignature("Authentication verification method not found in SDDIDDocument.")
-        
         # Iterate of each participant
         for party_did_id in self.did.network_participants:
             # Fetch the key url from auth_method
             party_key_url = self.fetch_party_key_from_auth_method(party_did_id, auth_method)
-
             # Fetch verification key of the party
             party_verification_method = self.fetch_party_verification_method(party_key_url)
-
             # Validate signature of the party
             if party_verification_method["type"] == "libnacl":
                 # validate signature
@@ -163,23 +201,14 @@ class CreateSDDIDRequest:
             else:
                 raise InvalidSignature("Unknown signature type: ", auth_method["type"])
 
-        if auth_method["type"] == "libnacl":
-            # validate signature
-            self._libnacl_validate(auth_method["publicKeyBase64"], self.signature["sigbase64"])
-            # TODO: Add more authentication methods / some standard
-        else:
-            raise InvalidSignature("Unknown signature type: ", auth_method["type"])
-
 class CreateSDDIDHandler(AbstractDIDReqHandler):
 
     def __init__(self, database_manager: DatabaseManager, did_dict: dict):
         super().__init__(database_manager, SDDID, did_dict)
 
     def additional_dynamic_validation(self, request: Request, req_pp_time: Optional[int]):
-
         operation = request.operation
         create_network_did_request_dict = operation.get(DATA)
-        
         # parse create did request
         # try:
         create_network_did_request = CreateSDDIDRequest(create_network_did_request_dict, self.state)

@@ -68,33 +68,22 @@ class CreateOUDIDRequest:
         self.did_str = json.dumps(request_dict["DIDDocument"])
         self.did = DID(self.did_str)
         self.signature = request_dict["signature"]
-        print("hello2")
 
     def authenticate(self):
         # Get authentication method
-        print("hello3.0")
         print(self.signature)
         auth_method = self.did.fetch_authentication_method(self.signature["verificationMethod"])
         print(f"=========={self.signature}==========")
-        print("hello3")
         print(auth_method)
-        print("hello4")
         print(auth_method["type"])
         if not auth_method:
             raise MissingSignature("Authentication verification method not found in DIDDocument.")
-        print("hello5")       
         if auth_method["type"] == "libnacl":
-            print("hello6")
             # validate signature
             # TODO: Json serialization is not faithful. Use ordered collections isntead.
-            print("publicKeyMultibase::>", auth_method["publicKeyMultibase"])
-            print("sigbase64         ::>", self.signature["sigbase64"])
             originalhash = libnacl.crypto_hash_sha256(self.did_str)
-            print("originalhash      ::>", originalhash)
-            print("did_str           ::>", self.did_str)
             # TAG::>
             libnacl_validate(auth_method["publicKeyMultibase"], self.signature["sigbase64"], originalhash)
-            print("hello7-thala for reason")
             # TODO: Add more authentication methods / some standard
         else:
             raise InvalidSignature("Unknown signature type: ", auth_method["type"])

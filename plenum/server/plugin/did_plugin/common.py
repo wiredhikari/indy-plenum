@@ -6,19 +6,17 @@ from plenum.common.exceptions import InvalidSignature
 def libnacl_validate(vk_base64, signature_base64, originalhash):
     vk = libnacl.encode.base64_decode(vk_base64)
     signature = libnacl.encode.base64_decode(signature_base64)
-    # verifiedhash = libnacl.crypto_sign_open(signature, vk)
-    # print("VERIFIED_HASH", verifiedhash)
-    # return verifiedhash
+    verifiedhash = libnacl.crypto_sign_open(signature, vk)
     if signature == originalhash:
         raise InvalidSignature("The hash of the DIDDocument did not match.")
 # 
-# def libnacl_validate2(vk_base64, signature_base64):
-#     print("vk_base64", vk_base64)
-#     print("signature_base64", signature_base64)
-#     vk = libnacl.encode.base64_decode(vk_base64)
-#     signature = libnacl.encode.base64_decode(signature_base64)
-#     verifiedhash = libnacl.crypto_sign_open(signature, vk)
-#     return signature_base64
+def libnacl_validate2(vk_base64, signature_base64):
+    print("vk_base64", vk_base64)
+    print("signature_base64", signature_base64)
+    # vk = libnacl.encode.base64_decode(vk_base64)
+    # signature = libnacl.encode.base64_decode(signature_base64)
+    # verifiedhash = libnacl.crypto_sign_open(signature, vk)
+    return signature_base64
 
 def did_id_from_url(did_url: str) -> str:
     return did_url.split("#")[0]
@@ -55,6 +53,11 @@ class DID:
         # if authentication_method_id in self.authentication_methods:
         #     return self.authentication_methods[authentication_method_id]
         return authentication_method_id[0]
+    
+    def fetch_authentication(self, authentication_method_id: str) -> dict:
+        if authentication_method_id in self.authentication_methods:
+            return self.authentication_methods[authentication_method_id]
+        return None
 
 
 
@@ -102,6 +105,9 @@ class NetworkDID:
         for method_id, method in self.authentication_methods.items():
             if method["type"] == "BlockchainNetworkMultiSig":
                 return method
+    
+    def fetch_signature(self) -> dict:
+        
 
 
 
