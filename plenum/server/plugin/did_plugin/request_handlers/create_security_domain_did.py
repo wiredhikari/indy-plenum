@@ -138,12 +138,45 @@ class CreateSDDIDRequest:
                 return candidate_key_url
 
     def fetch_party_verification_method(self, party_key_url):
+
+        print("hello3")
+
         party_did_id = did_id_from_url(party_key_url)
         # Fetch party did
         # TODO: if did is in some other iin network
             # Will handle later...
 
         # If did is in the same indy iin network
+        ### TODO: did:iin:iin123:shippingcompany -----> DIDDocument: {....}
+
+        json_data = {
+                        "@context": [
+                            "https://www.w3.org/ns/did/v1",
+                            "https://w3id.org/security/suites/ed25519-2020/v1"
+                        ],
+                        "id": party_did_id,
+                        "verificationMethod": [
+                            {
+                                "id": f"{party_did_id}#key1",
+                                "type": "libnacl",
+                                "controller": "did:example:123456789abcdefghi",
+                                "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z"
+                            }
+                        ],
+                        "authentication": [
+                            f"{party_did_id}#key1",
+                            {
+                                "id": f"{party_did_id}#key1",
+                                "type": "libnacl",
+                                "controller": "did:shippingcompany",
+                                "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z"
+                            }
+                        ]
+                    }
+        json_string = json.dumps(json_data, indent=4)
+        party_did = DID(json_string)
+        party_authentication_method = party_did.fetch_authentication(party_key_url)
+
         serialized_party_did = self.this_indy_state.get(party_did_id)
         # if not serialized_party_did:
             # raise "Could not resolve did " + party_did_id
@@ -203,8 +236,75 @@ class CreateSDDIDHandler(AbstractDIDReqHandler):
 
 
     def update_state(self, txn, prev_result, request, is_committed=False):
+        """
+        => The `BlockchainNetworkMultiSig` verification method, and `networkMembers` list must be updated to reflect the new network membership.
+            - `networkMembers` is updated with the list of DIDs of the new network members.
+            - A new `update policy` is associated with the `BlockchainNetworkMultiSig` verification method.
+
+        => 
+        """
         data = get_payload_data(txn).get(DATA)
-        create_network_did_request = CreateSDDIDRequest(data, self.state)
+        # What the hell is `data`
+        # print("data.....::>", data)
+
+        netwokMembers = []
+        multisig_keys = []
+        condition_or = []
+        signature = {}
+        sd_did_json = {
+                          "SecurityDomainDIDDocument": {
+                              "id": "did:<iin_name>:<network_name>",
+                              "networkMembers": netwokMembers,
+                              "verificationMethod": [
+                                  {
+                                      "id": "did:<iin_name>:<network_name>#multisig",
+                                      "type": "BlockchainNetworkMultiSig",
+                                      "controller": "did:<iin_name>:<network_name>",
+                                      "multisigKeys": multisig_keys,
+                                      "updatePolicy": {
+                                          "id": "did:<iin_name>:<network_name>#updatepolicy",
+                                          "controller": "did:<iin_name>:<network_name>",
+                                          "type": "VerifiableCondition2021",
+                                          "conditionAnd": [
+                                              {
+                                                  "id": "did:<iin_name>:<network_name>#updatepolicy-1",
+                                                  "controller": "did:<iin_name>:<network_name>",
+                                                  "type": "VerifiableCondition2021",
+                                                  "conditionOr": condition_or
+                                              },
+                                              "did:<iin_name>:<network_member_1>#key1"
+                                          ]
+                                      }
+                                  },
+                                  {
+                                      "id": "did:<iin_name>:<network_name>#fabriccerts",
+                                      "type": "DataplaneCredentials",
+                                      "controller": "did:<iin_name>:<network_name>",
+                                      "FabricCredentials": {
+                                          "did:<iin_name>:<network_member_1>": "Certificate3_Hash",
+                                          "did:<iin_name>:<network_member_2>": "Certificate2_Hash",
+                                          "did:<iin_name>:<network_member_3>": "Certificate3_Hash"
+                                      }
+                                  }
+                              ],
+                              "authentication": [
+                                  "did:<iin_name>:<network_name>#multisig"
+                              ],
+                              "relayEndpoints": [
+                                  {
+                                      "hostname": "10.0.0.8",
+                                      "port": "8888"
+                                  },
+                                  {
+                                      "hostname": "10.0.0.9",
+                                      "port": "8888"
+                                  }
+                              ]
+                          },
+                          "signatures": signature
+                      }
+        sd_did_json_string = json.dumps(sd_did_json)
+        create_network_did_request = CreateSDDIDRequest(sd_did_json_string, self.state)
 
         self.did_dict[create_network_did_request.did.id] = create_network_did_request.did_str
         key = create_network_did_request.did.id

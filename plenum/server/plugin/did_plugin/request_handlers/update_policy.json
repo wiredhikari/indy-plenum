@@ -1,0 +1,67 @@
+{
+    "SecurityDomainDIDDocument": {
+        "id": "did:<iin_name>:<network_name>",
+        "networkMembers": [
+            "did:<iin_name>:<network_member_1>",
+            "did:<iin_name>:<network_member_2>",
+            "did:<iin_name>:<network_member_3>"
+        ],
+        "verificationMethod": [
+            {
+                "id": "did:<iin_name>:<network_name>#multisig",
+                "type": "BlockchainNetworkMultiSig",
+                "controller": "did:<iin_name>:<network_name>",
+                "multisigKeys": [
+                    "did:<iin_name>:<network_member_1>#key1",
+                    "did:<iin_name>:<network_member_2>#key3",
+                    "did:<iin_name>:<network_member_3>#key1"
+                ],
+                "updatePolicy": {
+                    "id": "did:<iin_name>:<network_name>#updatepolicy",
+                    "controller": "did:<iin_name>:<network_name>",
+                    "type": "VerifiableCondition2021",
+                    "conditionAnd": [
+                        {
+                            "id": "did:<iin_name>:<network_name>#updatepolicy-1",
+                            "controller": "did:<iin_name>:<network_name>",
+                            "type": "VerifiableCondition2021",
+                            "conditionOr": [
+                                "did:<iin_name>:<network_member_3>#key1",
+                                "did:<iin_name>:<network_member_2>#key3"
+                            ]
+                        },
+                        "did:<iin_name>:<network_member_1>#key1"
+                    ]
+                }
+            },
+            {
+                "id": "did:<iin_name>:<network_name>#fabriccerts",
+                "type": "DataplaneCredentials",
+                "controller": "did:<iin_name>:<network_name>",
+                "FabricCredentials": {
+                    "did:<iin_name>:<network_member_1>": "Certificate3_Hash",
+                    "did:<iin_name>:<network_member_2>": "Certificate2_Hash",
+                    "did:<iin_name>:<network_member_3>": "Certificate3_Hash"
+                }
+            }
+        ],
+        "authentication": [
+            "did:<iin_name>:<network_name>#multisig"
+        ],
+        "relayEndpoints": [
+            {
+                "hostname": "10.0.0.8",
+                "port": "8888"
+            },
+            {
+                "hostname": "10.0.0.9",
+                "port": "8888"
+            }
+        ]
+    },
+    "signatures": {
+        "did:<iin_name>:<network_member_1>": "...",
+        "did:<iin_name>:<network_member_2>": "...",
+        "did:<iin_name>:<network_member_3>": "..."
+    }
+}
