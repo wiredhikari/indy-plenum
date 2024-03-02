@@ -106,7 +106,7 @@ class NetworkDID:
             if method["type"] == "BlockchainNetworkMultiSig":
                 return method
     
-    def fetch_signature(self) -> dict:
+    # def fetch_signature(self) -> dict:
         
 
 
