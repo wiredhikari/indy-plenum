@@ -106,11 +106,11 @@ class NetworkDID:
             if method["type"] == "BlockchainNetworkMultiSig":
                 return method
     
-    # def fetch_signature(self) -> dict:
-        
-
-
-
+    def fetch_signature(self) -> dict:
+        if authentication_method_id in self.authentication_methods:
+            return self.authentication_methods[authentication_method_id]
+        return None
+            
 class OUDID:
     did = None
     id = None

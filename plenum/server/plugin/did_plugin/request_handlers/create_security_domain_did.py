@@ -138,7 +138,9 @@ class CreateSDDIDRequest:
                 return candidate_key_url
 
     def fetch_party_verification_method(self, party_key_url):
+
         print("hello3")
+
         party_did_id = did_id_from_url(party_key_url)
         # Fetch party did
         # TODO: if did is in some other iin network
