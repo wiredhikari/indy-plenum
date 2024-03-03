@@ -15,7 +15,7 @@ class DemoTransactions(Transactions):
     CREATE_NETWORK_DID = PREFIX + '1'
     FETCH_DID = PREFIX + '2'
     UPDATE_DID = PREFIX + '3'
-    UPDATE_NETWORK_DID = PREFIX + '4'
+    UPDATE_NETWORK_DID = PREFIX + '8'
     DEACTIVATE_DID = PREFIX + '5'
     OUDID = PREFIX + '6'
     SDDID = PREFIX + '7'
