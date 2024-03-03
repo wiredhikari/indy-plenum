@@ -191,7 +191,7 @@ class SDDID:
                 return method
             
 
-class UPDATE_NETWORK_DID:
+class UPDATE_DID:
     did = None
     id = None
     verification_methods = None

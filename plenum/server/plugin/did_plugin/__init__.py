@@ -14,7 +14,8 @@ AcceptableWriteTypes = {DemoTransactions.CREATE_DID.value,
                         DemoTransactions.UPDATE_DID.value,
                         DemoTransactions.UPDATE_NETWORK_DID.value,
                         DemoTransactions.DEACTIVATE_DID.value,
-                        DemoTransactions.OUDID.value
+                        DemoTransactions.OUDID.value,
+                        DemoTransactions.SDDID.value
 }
 
 AcceptableQueryTypes = {DemoTransactions.FETCH_DID.value, }
