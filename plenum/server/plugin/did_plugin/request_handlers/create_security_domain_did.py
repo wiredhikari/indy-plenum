@@ -23,51 +23,51 @@ import libnacl.encode
 """
 {
   "SecurityDomainDIDDocument": {
-    "id": "did:<iin_name>:<network_name>",
+    "id": "did:iin_name:network_name",
     "networkMembers": [
-      "did:<iin_name>:<network_member_1>",
-      "did:<iin_name>:<network_member_2>",
-      "did:<iin_name>:<network_member_3>"
+      "did:iin_name:network_member_1",
+      "did:iin_name:<network_member_2>",
+      "did:iin_name:<network_member_3>"
     ],
     "verificationMethod": [{
-        "id": "did:<iin_name>:<network_name>#multisig",
+        "id": "did:iin_name:network_name#multisig",
         "type": "BlockchainNetworkMultiSig",
-        "controller": "did:<iin_name>:<network_name>",
+        "controller": "did:iin_name:network_name",
         "multisigKeys": [
-          "did:<iin_name>:<network_member_1>#key1",
-          "did:<iin_name>:<network_member_2>#key3",
-          "did:<iin_name>:<network_member_3>#key1"
+          "did:iin_name:network_member_1#key1",
+          "did:iin_name:<network_member_2>#key3",
+          "did:iin_name:<network_member_3>#key1"
         ],
         "updatePolicy": {
-          "id": "did:<iin_name>:<network_name>#updatepolicy",
-          "controller": "did:<iin_name>:<network_name>",
+          "id": "did:iin_name:network_name#updatepolicy",
+          "controller": "did:iin_name:network_name",
           "type": "VerifiableCondition2021",
           "conditionAnd": [{
-              "id": "did:<iin_name>:<network_name>#updatepolicy-1",
-              "controller": "did:<iin_name>:<network_name>",
+              "id": "did:iin_name:network_name#updatepolicy-1",
+              "controller": "did:iin_name:network_name",
               "type": "VerifiableCondition2021",
-              "conditionOr": ["did:<iin_name>:<network_member_3>#key1",
-                "did:<iin_name>:<network_member_2>#key3"
+              "conditionOr": ["did:iin_name:<network_member_3>#key1",
+                "did:iin_name:<network_member_2>#key3"
               ]
             },
-            "did:<iin_name>:<network_member_1>#key1"
+            "did:iin_name:network_member_1#key1"
           ]
         }
       },
 
       {
-        "id": "did:<iin_name>:<network_name>#fabriccerts",
+        "id": "did:iin_name:network_name#fabriccerts",
         "type": "DataplaneCredentials",
-        "controller": "did:<iin_name>:<network_name>",
+        "controller": "did:iin_name:network_name",
         "FabricCredentials": {
-          "did:<iin_name>:<network_member_1>": "Certificate3_Hash",
-          "did:<iin_name>:<network_member_2>": "Certificate2_Hash",
-          "did:<iin_name>:<network_member_3>": "Certificate3_Hash"
+          "did:iin_name:network_member_1": "Certificate3_Hash",
+          "did:iin_name:<network_member_2>": "Certificate2_Hash",
+          "did:iin_name:<network_member_3>": "Certificate3_Hash"
         }
       }
     ],
     "authentication": [
-      "did:<iin_name>:<network_name>#multisig"
+      "did:iin_name:network_name#multisig"
     ],
     "relayEndpoints": [{
         "hostname": "10.0.0.8",
@@ -81,9 +81,9 @@ import libnacl.encode
     ]
   },
   "signatures": {
-    "did:<iin_name>:<network_member_1>": "...",
-    "did:<iin_name>:<network_member_2>": "...",
-    "did:<iin_name>:<network_member_3>": "..."
+    "did:iin_name:network_member_1": "...",
+    "did:iin_name:<network_member_2>": "...",
+    "did:iin_name:<network_member_3>": "..."
   }
 }
 """
@@ -244,8 +244,7 @@ class CreateSDDIDHandler(AbstractDIDReqHandler):
         => 
         """
         data = get_payload_data(txn).get(DATA)
-        # What the hell is `data`
-        # print("data.....::>", data)
+        print("data.....::>", data)
 
         netwokMembers = []
         multisig_keys = []
@@ -253,42 +252,42 @@ class CreateSDDIDHandler(AbstractDIDReqHandler):
         signature = {}
         sd_did_json = {
                           "SecurityDomainDIDDocument": {
-                              "id": "did:<iin_name>:<network_name>",
+                              "id": "did:iin_name:network_name",
                               "networkMembers": netwokMembers,
                               "verificationMethod": [
                                   {
-                                      "id": "did:<iin_name>:<network_name>#multisig",
+                                      "id": "did:iin_name:network_name#multisig",
                                       "type": "BlockchainNetworkMultiSig",
-                                      "controller": "did:<iin_name>:<network_name>",
+                                      "controller": "did:iin_name:network_name",
                                       "multisigKeys": multisig_keys,
                                       "updatePolicy": {
-                                          "id": "did:<iin_name>:<network_name>#updatepolicy",
-                                          "controller": "did:<iin_name>:<network_name>",
+                                          "id": "did:iin_name:network_name#updatepolicy",
+                                          "controller": "did:iin_name:network_name",
                                           "type": "VerifiableCondition2021",
                                           "conditionAnd": [
                                               {
-                                                  "id": "did:<iin_name>:<network_name>#updatepolicy-1",
-                                                  "controller": "did:<iin_name>:<network_name>",
+                                                  "id": "did:iin_name:network_name#updatepolicy-1",
+                                                  "controller": "did:iin_name:network_name",
                                                   "type": "VerifiableCondition2021",
                                                   "conditionOr": condition_or
                                               },
-                                              "did:<iin_name>:<network_member_1>#key1"
+                                              "did:iin_name:network_member_1#key1"
                                           ]
                                       }
                                   },
                                   {
-                                      "id": "did:<iin_name>:<network_name>#fabriccerts",
+                                      "id": "did:iin_name:network_name#fabriccerts",
                                       "type": "DataplaneCredentials",
-                                      "controller": "did:<iin_name>:<network_name>",
+                                      "controller": "did:iin_name:network_name",
                                       "FabricCredentials": {
-                                          "did:<iin_name>:<network_member_1>": "Certificate3_Hash",
-                                          "did:<iin_name>:<network_member_2>": "Certificate2_Hash",
-                                          "did:<iin_name>:<network_member_3>": "Certificate3_Hash"
+                                          "did:iin_name:network_member_1": "Certificate3_Hash",
+                                          "did:iin_name:network_member_2": "Certificate2_Hash",
+                                          "did:iin_name:network_member_3": "Certificate3_Hash"
                                       }
                                   }
                               ],
                               "authentication": [
-                                  "did:<iin_name>:<network_name>#multisig"
+                                  "did:iin_name:network_name#multisig"
                               ],
                               "relayEndpoints": [
                                   {
