@@ -3,20 +3,18 @@ import libnacl
 import libnacl.encode
 from plenum.common.exceptions import InvalidSignature
 
-def libnacl_validate(vk_base64, signature_base64, originalhash):
+def libnacl_validate(signature, originalhash):
+    if signature != originalhash:
+        raise InvalidSignature("The hash of the DIDDocument     did not match.")
+    
+def libnacl_validate2(self, vk_base64, signature_base64, originalhash):
+    print("vk_base64", vk_base64)
+    print("signature_base64", signature_base64)
     vk = libnacl.encode.base64_decode(vk_base64)
     signature = libnacl.encode.base64_decode(signature_base64)
     verifiedhash = libnacl.crypto_sign_open(signature, vk)
-    if signature == originalhash:
+    if verifiedhash != originalhash:
         raise InvalidSignature("The hash of the DIDDocument did not match.")
-# 
-def libnacl_validate2(vk_base64, signature_base64):
-    print("vk_base64", vk_base64)
-    print("signature_base64", signature_base64)
-    # vk = libnacl.encode.base64_decode(vk_base64)
-    # signature = libnacl.encode.base64_decode(signature_base64)
-    # verifiedhash = libnacl.crypto_sign_open(signature, vk)
-    return signature_base64
 
 def did_id_from_url(did_url: str) -> str:
     return did_url.split("#")[0]

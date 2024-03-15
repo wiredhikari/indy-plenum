@@ -189,30 +189,52 @@ class CreateSDDIDRequest:
 
     def authenticate(self):
         # Get any one authentication method of type GroupMultiSig
+        print("ENTERED....VALIDATION")
         auth_method = self.did.fetch_authentication_method()
 
         if not auth_method:
             raise MissingSignature("Authentication verification method not found in SDDIDDocument.")
         # Iterate of each participant
         for party_did_id in self.did.network_participants:
-            # Fetch the key url from auth_method
+            # # Fetch the key url from auth_method
             party_key_url = self.fetch_party_key_from_auth_method(party_did_id, auth_method)
-            # Fetch verification key of the party
+            # # Fetch verification key of the party
             party_verification_method = self.fetch_party_verification_method(party_key_url)
-            # Validate signature of the party
+            # print(f"Debug.... (PUBLICKEY_BASE64) {party_verification_method["publicKeyBase64"]}")
+            # # Validate signature of the party
             if party_verification_method["type"] == "libnacl":
-                # validate signature
-                # TODO: Json serialization is not faithful. Use ordered collections isntead.
-                originalhash = libnacl.crypto_hash_sha256(self.did_str)
-                libnacl_validate(party_verification_method["publicKeyBase64"], self.signatures[party_did_id], originalhash)
+                # self.signatures[party_did_id] => Signatures present in the SDDID `Signature field`
+                ou_body = {                                                                        
+                            "DIDDocument": {                                              
+                              "id": party_did_id,                                
+                              "verificationMethod": [{                                                
+                                "id": "did:method-name:method-specific-id",                       
+                                "type": "Ed25519VerificationKey2020",                                 
+                                "controller": "did:method-name:method-specific-id",               
+                                "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                              }],                                                                     
+                                                                                                      
+                              "authentication": ["did:method-name:method-specific-id"]            
+                            },        
+                          }  
+                ou_did_str = json.dumps(ou_body["DIDDocument"])
+                originalhash = libnacl.crypto_hash_sha256(ou_did_str)
+                print(f"Debug.... (ORIGINAL_HASH) {originalhash}")
 
-                # TODO: Add more authentication methods / some standard
-            else:
-                raise InvalidSignature("Unknown signature type: ", auth_method["type"])
+                signature_in_sddid = self.signatures[party_did_id]
+                libnacl_validate(signature_in_sddid, originalhash)
+                print("Debug.... (signature_in_sddid)", signature_in_sddid)
+            #     # validate signature
+            #     # TODO: Json serialization is not faithful. Use ordered collections isntead.
+
+            #     # TODO: Add more authentication methods / some standard
+            # else:
+            #     raise InvalidSignature("Unknown signature type: ", auth_method["type"])
 
 class CreateSDDIDHandler(AbstractDIDReqHandler):
 
     def __init__(self, database_manager: DatabaseManager, did_dict: dict):
+        print("ENTERED....")
         super().__init__(database_manager, SDDID, did_dict)
 
     def additional_dynamic_validation(self, request: Request, req_pp_time: Optional[int]):

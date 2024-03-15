@@ -40,20 +40,20 @@ DID identifier (globally unique)::> Stencil: did:<method-name>:<method-specific-
 ================================
 
 =================================================================================
-|| {                                                                           ||
-||   "DIDDocument": {   "controller                                            ||
-||     "id": "did:<method-name>:<method-specific-id>",                         ||          
-||     "verificationMethod": [{                                                ||
-||       "id": "did:<method-name>:<method-specific-id>",                       ||
-||       "type": "Ed25519VerificationKey2020",                                 ||
-||       "controller": "did:<method-name>:<method-specific-id>",               ||
-||       "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV" ||  <=================??????=======
-||     }],                                                                     ||
-||                                                                             ||
-||     "authentication": ["did:<method-name>:<method-specific-id>"]            ||
-||   },                                                                        ||
-||   "signature": {"did:iin:<method-name>:<method-specific-id>": "..."}        ||    
-|| }                                                                           ||
+{                                                                           ||
+  "DIDDocument": {                                                          ||
+    "id": "did:<method-name>:<method-specific-id>",                         ||          
+    "verificationMethod": [{                                                ||
+      "id": "did:<method-name>:<method-specific-id>",                       ||
+      "type": "Ed25519VerificationKey2020",                                 ||
+      "controller": "did:<method-name>:<method-specific-id>",               ||
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV" ||  <=================??????=======
+    }],                                                                     ||
+                                                                            ||
+    "authentication": ["did:<method-name>:<method-specific-id>"]            ||
+  },                                                                        ||
+  "signature": {"did:iin:<method-name>:<method-specific-id>": "..."}        ||    
+}                                                                           ||
 =================================================================================
 
 
