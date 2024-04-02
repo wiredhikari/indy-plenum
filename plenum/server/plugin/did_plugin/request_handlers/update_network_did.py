@@ -9,15 +9,9 @@ from common.serializers.serialization import domain_state_serializer
 from plenum.common.exceptions import InvalidClientRequest, MissingSignature, InvalidSignature
 
 from plenum.server.database_manager import DatabaseManager
-from common.serializers.json_serializer import JsonSerializer
-from plenum.common.types import f
-from plenum.server.plugin.did_plugin import DID_PLUGIN_LEDGER_ID
-from plenum.server.plugin.did_plugin.constants import  UPDATE_NETWORK_DID
-from plenum.server.request_handlers.handler_interfaces.read_request_handler import ReadRequestHandler
-# from plenum.server.plugin.did_plugin.request_handlers.create_security_domain_did import CreateSDDIDHandler
-from plenum.server.plugin.did_plugin.request_handlers.create_security_domain_did import CreateSDDIDRequest
+from plenum.server.plugin.did_plugin.constants import  SDDID
 from plenum.server.plugin.did_plugin.request_handlers.abstract_did_req_handler import AbstractDIDReqHandler
-from plenum.server.plugin.did_plugin.common import DID, NetworkDID, UPDATE_DID, did_id_from_url, libnacl_validate, libnacl_validate2
+from plenum.server.plugin.did_plugin.common import DID, NetworkDID, did_id_from_url, libnacl_validate, libnacl_validate2
 
 
 from plenum.common.txn_util import get_payload_data, get_from, \
@@ -26,51 +20,251 @@ from plenum.common.txn_util import get_payload_data, get_from, \
 import libnacl
 import libnacl.encode
 
-class UpdateNetworkDIDHandler(ReadRequestHandler):
+"""
+{
+  "SecurityDomainDIDDocument": {
+    "id": "did:iin_name:network_name",
+    "networkMembers": [
+      "did:iin_name:network_member_1",
+      "did:iin_name:<network_member_2>",
+      "did:iin_name:<network_member_3>"
+    ],
+    "verificationMethod": [{
+        "id": "did:iin_name:network_name#multisig",
+        "type": "BlockchainNetworkMultiSig",
+        "controller": "did:iin_name:network_name",
+        "multisigKeys": [
+          "did:iin_name:network_member_1#key1",
+          "did:iin_name:<network_member_2>#key3",
+          "did:iin_name:<network_member_3>#key1"
+        ],
+        "updatePolicy": {
+          "id": "did:iin_name:network_name#updatepolicy",
+          "controller": "did:iin_name:network_name",
+          "type": "VerifiableCondition2021",
+          "conditionAnd": [{
+              "id": "did:iin_name:network_name#updatepolicy-1",
+              "controller": "did:iin_name:network_name",
+              "type": "VerifiableCondition2021",
+              "conditionOr": ["did:iin_name:<network_member_3>#key1",
+                "did:iin_name:<network_member_2>#key3"
+              ]
+            },
+            "did:iin_name:network_member_1#key1"
+          ]
+        }
+      },
+
+      {
+        "id": "did:iin_name:network_name#fabriccerts",
+        "type": "DataplaneCredentials",
+        "controller": "did:iin_name:network_name",
+        "FabricCredentials": {
+          "did:iin_name:network_member_1": "Certificate3_Hash",
+          "did:iin_name:<network_member_2>": "Certificate2_Hash",
+          "did:iin_name:<network_member_3>": "Certificate3_Hash"
+        }
+      }
+    ],
+    "authentication": [
+      "did:iin_name:network_name#multisig"
+    ],
+    "relayEndpoints": [{
+        "hostname": "10.0.0.8",
+        "port": "8888"
+      },
+      {
+        "hostname": "10.0.0.9",
+        "port": "8888"
+      }
+
+    ]
+  },
+  "signatures": {
+    "did:iin_name:network_member_1": "...",
+    "did:iin_name:<network_member_2>": "...",
+    "did:iin_name:<network_member_3>": "..."
+  }
+}
+"""
+
+
+    
+"""
+<<<<NORMAL DID>>>>
+"DIDDocument": {
+                "@context": [
+                    "https://www.w3.org/ns/did/v1",
+                    "https://w3id.org/security/suites/ed25519-2020/v1"
+                ],
+                "id": "did:iin:iin123:shippingcompany",
+                "verificationMethod": [
+                    {
+                        "id": "did:iin:iin123:shippingcompany#key-1",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": "did:example:123456789abcdefghi",
+                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                ],
+                "authentication": [
+                    "did:iin:iin123:shippingcompany#keys-1",
+                    {
+                        "id": "did:iin:iin123:shippingcompany#keys-2",
+                        "type": "Ed25519VerificationKey2020",
+                        "controller": "did:shippingcompany",
+                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                    }
+                ]
+            },
+"""
+
+
+
+class CreateSDDIDRequest:
     did: NetworkDID = None
     did_str = None
     signatures = None
     this_indy_state = None
-
-    # FETCH_DID type `__init__`
-    # def __init__(self, database_manager: DatabaseManager):
-    #     super().__init__(database_manager, UPDATE_NETWORK_DID, DID_PLUGIN_LEDGER_ID)
-
     def __init__(self, request_dict: str, indy_state) -> None:
         self.did_str = json.dumps(request_dict["DIDDocument"])
         self.did = NetworkDID(self.did_str)
         self.signatures = request_dict["signatures"]
         self.this_indy_state = indy_state
 
-    def static_validation(self, request: Request):
-        pass
+    def fetch_party_key_from_auth_method(self, party_did_id, auth_method):
+        for candidate_key_url in auth_method["multisigKeys"]:
+            base_url = did_id_from_url(candidate_key_url)
+            if base_url == party_did_id:
+                return candidate_key_url
 
-    def get_list_of_dids(self, request: Request):
-        did = request.operation.get(DATA).get("id").encode()
-        return did
-        # serialized_did = self.state.get(did, isCommitted=True)
-        # did_data, proof = self._get_value_from_state(did, with_proof=True)
-        
-        # did = JsonSerializer().deserialize(serialized_did) if serialized_did else None
+    def fetch_party_verification_method(self, party_key_url):
 
-        # return {**request.operation, **{
-        #     f.IDENTIFIER.nm: request.identifier,
-        #     f.REQ_ID.nm: request.reqId,
-        #     "did": did
-        # }}
-    
-    def update_sddid(self, txn, request: Request):
-        # Get All the DIDs present.
-        dids = self.get_list_of_dids(request)
+        print("hello3")
 
-        # Fetch current UpdateDID_request @ID...
-        current_did_id = "rANDOm"
-        if current_did_id not in dids:
-            # Call `create_security_domain_did.py` to create new SDDID.
-            sd_did_json_string = self.did_str
-            CreateSDDIDRequest(sd_did_json_string, self.state)
-             
-        # Update the SDDID_request ID.
+        party_did_id = did_id_from_url(party_key_url)
+        # Fetch party did
+        # TODO: if did is in some other iin network
+            # Will handle later...
+
+        # If did is in the same indy iin network
+        ### TODO: did:iin:iin123:shippingcompany -----> DIDDocument: {....}
+
+        json_data = {
+                        "@context": [
+                            "https://www.w3.org/ns/did/v1",
+                            "https://w3id.org/security/suites/ed25519-2020/v1"
+                        ],
+                        "id": party_did_id,
+                        "verificationMethod": [
+                            {
+                                "id": f"{party_did_id}#key1",
+                                "type": "libnacl",
+                                "controller": "did:example:123456789abcdefghi",
+                                "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z"
+                            }
+                        ],
+                        "authentication": [
+                            f"{party_did_id}#key1",
+                            {
+                                "id": f"{party_did_id}#key1",
+                                "type": "libnacl",
+                                "controller": "did:shippingcompany",
+                                "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z"
+                            }
+                        ]
+                    }
+        json_string = json.dumps(json_data, indent=4)
+        party_did = DID(json_string)
+        party_authentication_method = party_did.fetch_authentication(party_key_url)
+
+        serialized_party_did = self.this_indy_state.get(party_did_id)
+        # if not serialized_party_did:
+            # raise "Could not resolve did " + party_did_id
+        print(serialized_party_did)
+        party_did = domain_state_serializer.deserialize(serialized_party_did)
+        party_did = DID(party_did)
+        party_authentication_method = party_did.fetch_authentication_method(party_key_url)
+        return party_authentication_method
+
+
+    def authenticate(self):
+        # Get any one authentication method of type GroupMultiSig
+        print("ENTERED....VALIDATION")
+        auth_method = self.did.fetch_authentication_method()
+
+        if not auth_method:
+            raise MissingSignature("Authentication verification method not found in SDDIDDocument.")
+        # Iterate of each participant
+        for party_did_id in self.did.network_participants:
+            # # Fetch the key url from auth_method
+            party_key_url = self.fetch_party_key_from_auth_method(party_did_id, auth_method)
+            # # Fetch verification key of the party
+            party_verification_method = self.fetch_party_verification_method(party_key_url)
+            # print(f"Debug.... (PUBLICKEY_BASE64) {party_verification_method["publicKeyBase64"]}")
+            # # Validate signature of the party
+            if party_verification_method["type"] == "libnacl":
+                # self.signatures[party_did_id] => Signatures present in the SDDID `Signature field`
+                ou_body = {                                                                        
+                            "DIDDocument": {                                              
+                              "id": party_did_id,                                
+                              "verificationMethod": [{                                                
+                                "id": "did:method-name:method-specific-id",                       
+                                "type": "Ed25519VerificationKey2020",                                 
+                                "controller": "did:method-name:method-specific-id",               
+                                "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+                              }],                                                                     
+                                                                                                      
+                              "authentication": ["did:method-name:method-specific-id"]            
+                            },        
+                          }  
+                ou_did_str = json.dumps(ou_body["DIDDocument"])
+                originalhash = libnacl.crypto_hash_sha256(ou_did_str)
+                print(f"Debug.... (ORIGINAL_HASH) {originalhash}")
+
+                signature_in_sddid = self.signatures[party_did_id]
+                libnacl_validate(signature_in_sddid, originalhash)
+                print("Debug.... (signature_in_sddid)", signature_in_sddid)
+            #     # validate signature
+            #     # TODO: Json serialization is not faithful. Use ordered collections isntead.
+
+            #     # TODO: Add more authentication methods / some standard
+            # else:
+            #     raise InvalidSignature("Unknown signature type: ", auth_method["type"])
+
+class CreateSDDIDHandler(AbstractDIDReqHandler):
+
+    def __init__(self, database_manager: DatabaseManager, did_dict: dict):
+        print("ENTERED....")
+        super().__init__(database_manager, SDDID, did_dict)
+
+    def additional_dynamic_validation(self, request: Request, req_pp_time: Optional[int]):
+        operation = request.operation
+        create_network_did_request_dict = operation.get(DATA)
+        # parse create did request
+        # try:
+        create_network_did_request = CreateSDDIDRequest(create_network_did_request_dict, self.state)
+        # except:
+            # raise InvalidClientRequest(request.identifier, request.reqId, "Malformed CREATE_NETWORK_DID request.")
+
+        # TODO Check if the did uri corresponds to this iin or not.
+
+        # Check if did already in this iin or not.
+        serialized_did = self.state.get(create_network_did_request.did.id, isCommitted=True)
+        if serialized_did:
+            raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
+
+        # Authenticate
+        create_network_did_request.authenticate()
+
+
+    def update_state(self, txn, prev_result, request, is_committed=False):
+        """
+        => The `BlockchainNetworkMultiSig` verification method, and `networkMembers` list must be updated to reflect the new network membership.
+            - `networkMembers` is updated with the list of DIDs of the new network members.
+            - A new `update policy` is associated with the `BlockchainNetworkMultiSig` verification method.
+
+        => 
+        """
         data = get_payload_data(txn).get(DATA)
         print("data.....::>", data)
 
