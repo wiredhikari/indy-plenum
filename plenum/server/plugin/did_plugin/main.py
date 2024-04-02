@@ -6,7 +6,7 @@ from plenum.server.plugin.did_plugin.config import get_config
 from plenum.server.plugin.did_plugin.request_handlers.create_did_handler import CreateDIDHandler
 from plenum.server.plugin.did_plugin.request_handlers.create_org_unit_id import CreateOUDIDHandler
 from plenum.server.plugin.did_plugin.request_handlers.create_security_domain_did import CreateSDDIDHandler
-# from plenum.server.plugin.did_plugin.request_handlers.update_network_did import UpdateNetworkDIDRequest
+from plenum.server.plugin.did_plugin.request_handlers.update_network_did import UpdateNetworkDIDRequest
 # from plenum.server.plugin.did_plugin.request_handlers.create_network_did_haendler import CreateNetworkDIDHandler
 
 from plenum.server.plugin.did_plugin.request_handlers.fetch_did import FetchDIDHandler
@@ -37,7 +37,7 @@ def integrate_plugin_in_node(node):
     node.write_manager.register_req_handler(CreateDIDHandler(node.db_manager, did_dict))
     node.write_manager.register_req_handler(CreateOUDIDHandler(node.db_manager, did_dict))
     node.write_manager.register_req_handler(CreateSDDIDHandler(node.db_manager, did_dict))
-    # node.write_manager.register_req_handler(UpdateNetworkDIDRequest(node.db_manager, did_dict))
+    node.write_manager.register_req_handler(UpdateNetworkDIDRequest(node.db_manager, did_dict))
     # node.write_manager.register_req_handler(CreateSDDIDHandler(node.db_manager, did_dict))
 
     # node.write_manager.register_req_handler(AuctionEndHandler(node.db_manager, did_dict))
