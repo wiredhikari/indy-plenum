@@ -20,106 +20,6 @@ from plenum.common.txn_util import get_payload_data, get_from, \
 import libnacl
 import libnacl.encode
 
-"""
-{
-  "SecurityDomainDIDDocument": {
-    "id": "did:iin_name:network_name",
-    "networkMembers": [
-      "did:iin_name:network_member_1",
-      "did:iin_name:<network_member_2>",
-      "did:iin_name:<network_member_3>"
-    ],
-    "verificationMethod": [{
-        "id": "did:iin_name:network_name#multisig",
-        "type": "BlockchainNetworkMultiSig",
-        "controller": "did:iin_name:network_name",
-        "multisigKeys": [
-          "did:iin_name:network_member_1#key1",
-          "did:iin_name:<network_member_2>#key3",
-          "did:iin_name:<network_member_3>#key1"
-        ],
-        "updatePolicy": {
-          "id": "did:iin_name:network_name#updatepolicy",
-          "controller": "did:iin_name:network_name",
-          "type": "VerifiableCondition2021",
-          "conditionAnd": [{
-              "id": "did:iin_name:network_name#updatepolicy-1",
-              "controller": "did:iin_name:network_name",
-              "type": "VerifiableCondition2021",
-              "conditionOr": ["did:iin_name:<network_member_3>#key1",
-                "did:iin_name:<network_member_2>#key3"
-              ]
-            },
-            "did:iin_name:network_member_1#key1"
-          ]
-        }
-      },
-
-      {
-        "id": "did:iin_name:network_name#fabriccerts",
-        "type": "DataplaneCredentials",
-        "controller": "did:iin_name:network_name",
-        "FabricCredentials": {
-          "did:iin_name:network_member_1": "Certificate3_Hash",
-          "did:iin_name:<network_member_2>": "Certificate2_Hash",
-          "did:iin_name:<network_member_3>": "Certificate3_Hash"
-        }
-      }
-    ],
-    "authentication": [
-      "did:iin_name:network_name#multisig"
-    ],
-    "relayEndpoints": [{
-        "hostname": "10.0.0.8",
-        "port": "8888"
-      },
-      {
-        "hostname": "10.0.0.9",
-        "port": "8888"
-      }
-
-    ]
-  },
-  "signatures": {
-    "did:iin_name:network_member_1": "...",
-    "did:iin_name:<network_member_2>": "...",
-    "did:iin_name:<network_member_3>": "..."
-  }
-}
-"""
-
-
-    
-"""
-<<<<NORMAL DID>>>>
-"DIDDocument": {
-                "@context": [
-                    "https://www.w3.org/ns/did/v1",
-                    "https://w3id.org/security/suites/ed25519-2020/v1"
-                ],
-                "id": "did:iin:iin123:shippingcompany",
-                "verificationMethod": [
-                    {
-                        "id": "did:iin:iin123:shippingcompany#key-1",
-                        "type": "Ed25519VerificationKey2020",
-                        "controller": "did:example:123456789abcdefghi",
-                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-                    }
-                ],
-                "authentication": [
-                    "did:iin:iin123:shippingcompany#keys-1",
-                    {
-                        "id": "did:iin:iin123:shippingcompany#keys-2",
-                        "type": "Ed25519VerificationKey2020",
-                        "controller": "did:shippingcompany",
-                        "publicKeyBase64": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
-                    }
-                ]
-            },
-"""
-
-
-
 class CreateSDDIDRequest:
     did: NetworkDID = None
     did_str = None
@@ -198,7 +98,7 @@ class CreateSDDIDRequest:
         for party_did_id in self.did.network_participants:
             # # Fetch the key url from auth_method
             party_key_url = self.fetch_party_key_from_auth_method(party_did_id, auth_method)
-            # # Fetch verification key of the party
+            # # Fetch verification key of the partyverifica
             party_verification_method = self.fetch_party_verification_method(party_key_url)
             # print(f"Debug.... (PUBLICKEY_BASE64) {party_verification_method["publicKeyBase64"]}")
             # # Validate signature of the party
@@ -247,9 +147,11 @@ class CreateSDDIDHandler(AbstractDIDReqHandler):
             # raise InvalidClientRequest(request.identifier, request.reqId, "Malformed CREATE_NETWORK_DID request.")
 
         # TODO Check if the did uri corresponds to this iin or not.
-
+        serialized_signature = self.state.get(create_network_did_request.did.fetch_signature, isCommitted=True)
+        if not serialized_signature:
+            raise InvalidClientRequest(request.identifier, request.reqId, "OUDID not registered for this indivicual.")
         # Check if did already in this iin or not.
-        serialized_did = self.state.get(create_network_did_request.did.id, isCommitted=True)
+        serialized_did = self.state.get(create_network_did_request.did.id, isCommitted=True)        
         if serialized_did:
             raise InvalidClientRequest(request.identifier, request.reqId, "DID already exists.")
 
@@ -326,7 +228,6 @@ class CreateSDDIDHandler(AbstractDIDReqHandler):
                       }
         sd_did_json_string = json.dumps(sd_did_json)
         create_network_did_request = CreateSDDIDRequest(sd_did_json_string, self.state)
-
         self.did_dict[create_network_did_request.did.id] = create_network_did_request.did_str
         key = create_network_did_request.did.id
         val = self.did_dict[create_network_did_request.did.id]

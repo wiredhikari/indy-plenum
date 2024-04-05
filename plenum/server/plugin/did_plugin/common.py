@@ -13,7 +13,7 @@ def libnacl_validate2(self, vk_base64, signature_base64, originalhash):
     vk = libnacl.encode.base64_decode(vk_base64)
     signature = libnacl.encode.base64_decode(signature_base64)
     verifiedhash = libnacl.crypto_sign_open(signature, vk)
-    if verifiedhash != originalhash:
+    if signature!= originalhash:
         raise InvalidSignature("The hash of the DIDDocument did not match.")
 
 def did_id_from_url(did_url: str) -> str:
